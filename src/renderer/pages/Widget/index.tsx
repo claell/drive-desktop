@@ -24,9 +24,18 @@ export default function Widget() {
     window.electron.retryVirtualDriveMount();
   };
 
-  const displayErrorInWidget =
-    (virtualDriveStatus && virtualDriveStatus === 'FAILED_TO_MOUNT') ||
-    (syncStatus && syncStatus === 'FAILED');
+  const shouldDisplayErrorInWidget = () => {
+    if (virtualDriveStatus === 'FAILED_TO_MOUNT') {
+      return true;
+    }
+
+    if (syncStatus && syncStatus === 'FAILED') {
+      return true;
+    }
+
+    return false;
+  };
+
   const renderWidgetError = () => {
     if (
       virtualDriveStatus === 'FAILED_TO_MOUNT' ||
@@ -50,7 +59,7 @@ export default function Widget() {
       <Header />
       <SyncErrorBanner />
       <BackupsFatalErrorBanner />
-      {displayErrorInWidget ? renderWidgetError() : <SyncInfo />}
+      {shouldDisplayErrorInWidget() ? renderWidgetError() : <SyncInfo />}
       <SyncAction syncStatus={syncStatus} />
     </div>
   );

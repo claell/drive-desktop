@@ -34,51 +34,52 @@ const retryVirtualDriveMountAndSendEvents = () => {
 };
 
 async function setUp() {
-  ipc.send('WEBDAV_VIRTUAL_DRIVE_STARTING');
-  const containerFactory = new DependencyContainerFactory();
-  const container = await containerFactory.build();
+  try {
+    ipc.send('WEBDAV_VIRTUAL_DRIVE_STARTING');
 
-  const fileSystem = await InternxtFileSystemFactory.build(container);
-  const storageManager =
-    process.platform !== 'win32'
-      ? await InternxtStorageManagerFactory.build(container)
-      : undefined;
+    const containerFactory = new DependencyContainerFactory();
+    const container = await containerFactory.build();
 
-  const server = new InternxtWebdavServer(PORT, container, storageManager);
+    const fileSystem = await InternxtFileSystemFactory.build(container);
+    const storageManager =
+      process.platform !== 'win32'
+        ? await InternxtStorageManagerFactory.build(container)
+        : undefined;
 
-  await server.start([{ path: '/', fs: fileSystem }], { debug: false });
+    const server = new InternxtWebdavServer(PORT, container, storageManager);
 
-  mountDrive()
-    .then(() => {
-      ipc.send('WEBDAV_VIRTUAL_DRIVE_MOUNTED_SUCCESSFULLY');
-    })
-    .catch((reason: Error) => {
-      ipc.send('WEBDAV_VIRTUAL_DRIVE_MOUNT_ERROR', reason);
-      if (!retriedMount) {
-        retriedMount = true;
-        retryVirtualDriveMountAndSendEvents();
-      }
+    ipcRenderer.on('RETRY_VIRTUAL_DRIVE_MOUNT', () => {
+      retryVirtualDriveMountAndSendEvents();
     });
 
-  ipcRenderer.on('RETRY_VIRTUAL_DRIVE_MOUNT', () => {
-    retryVirtualDriveMountAndSendEvents();
-  });
-
-  ipc.on('STOP_WEBDAV_SERVER_PROCESS', () => {
-    unmountDrive().catch((err) => {
-      Logger.error('Failed to unmount the Virtual Drive ', err);
-    });
-    server
-      .stop()
-      .then(() => {
-        Logger.log('[WEBDAB] Server stopped succesfully');
-        ipc.send('WEBDAV_SERVER_STOP_SUCCESS');
-      })
-      .catch((err) => {
-        Logger.log('[WEBDAB] Server stopped with error', err);
-        ipc.send('WEBDAV_SERVER_STOP_ERROR', err);
+    ipc.on('STOP_WEBDAV_SERVER_PROCESS', () => {
+      unmountDrive().catch((err) => {
+        Logger.error('Failed to unmount the Virtual Drive ', err);
       });
-  });
+      server
+        .stop()
+        .then(() => {
+          Logger.log('[WEBDAB] Server stopped succesfully');
+          ipc.send('WEBDAV_SERVER_STOP_SUCCESS');
+        })
+        .catch((err) => {
+          Logger.log('[WEBDAB] Server stopped with error', err);
+          ipc.send('WEBDAV_SERVER_STOP_ERROR', err);
+        });
+    });
+
+    await server.start([{ path: '/', fs: fileSystem }], { debug: false });
+
+    await mountDrive();
+
+    ipc.send('WEBDAV_VIRTUAL_DRIVE_MOUNTED_SUCCESSFULLY');
+  } catch (error) {
+    ipc.send('WEBDAV_VIRTUAL_DRIVE_MOUNT_ERROR', error as Error);
+    if (!retriedMount) {
+      retriedMount = true;
+      retryVirtualDriveMountAndSendEvents();
+    }
+  }
 }
 
 setUp().catch((err) => {

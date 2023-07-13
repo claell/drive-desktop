@@ -56,6 +56,23 @@ ipcMain.handle('START_REMOTE_SYNC', async () => {
   await remoteSyncManager.startRemoteSync();
 });
 
+ipcMain.handle(
+  'UPDATE_FOLDER_IN_LOCAL_DB',
+  async (
+    _,
+    {
+      folderId,
+      name,
+      status,
+    }: { folderId: number; name?: string; status?: string }
+  ) => {
+    await driveFoldersCollection.updateById(folderId, {
+      name,
+      status,
+    });
+  }
+);
+
 remoteSyncManager.onStatusChange((newStatus) => {
   if (!initialSyncReady && newStatus === 'SYNCED') {
     initialSyncReady = true;

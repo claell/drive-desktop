@@ -23,7 +23,8 @@ type TrackedWebdavServerActions = Capitalize<
   (typeof trackedEventsActions)[number]
 >;
 
-export type TrackedWebdavServerEventsActions = `${TrackedWebdavServerEvents} ${TrackedWebdavServerActions}`;
+export type TrackedWebdavServerEventsActions =
+  `${TrackedWebdavServerEvents} ${TrackedWebdavServerActions}`;
 
 export type WebdavErrorContext = {
   action: TrackedWebdavServerEvents;
@@ -144,6 +145,14 @@ export type WebdavInvokableFunctions = {
     folders: DriveFolder[];
   }>;
   START_REMOTE_SYNC: () => Promise<void>;
+  UPDATE_FOLDER_IN_LOCAL_DB: ({
+    folderId,
+    name,
+  }: {
+    folderId: number;
+    name?: string;
+    status?: 'TRASHED' | 'EXISTS' | 'REMOVED';
+  }) => Promise<void>;
 };
 
 export type WebDavProcessEvents = WebdavServerEvents &

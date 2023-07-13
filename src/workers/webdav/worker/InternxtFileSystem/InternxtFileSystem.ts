@@ -103,6 +103,7 @@ export class InternxtFileSystem extends FileSystem {
 
   _create(path: Path, ctx: CreateInfo, callback: SimpleCallback): void {
     if (ctx.type.isDirectory) {
+      Logger.debug('[Creating Directory]: ' + path.toString(false));
       this.container.folderCreator
         .run(path.toString(false))
         .then(() => {
@@ -121,6 +122,7 @@ export class InternxtFileSystem extends FileSystem {
       const isValidName = this.fileValidator.validatePath(path);
       if (!isValidName) return callback(Errors.UnrecognizedResource);
 
+      Logger.debug('[Creating File]: ' + path.toString(false));
       this.resources[path.toString(false)] = new PhysicalFileSystemResource();
 
       return callback();
@@ -155,6 +157,7 @@ export class InternxtFileSystem extends FileSystem {
     }
 
     if (item.isFolder()) {
+      Logger.debug('[Deleting Folder]: ' + item.name);
       this.container.folderDeleter
         .run(item)
         .then(() => callback())
@@ -176,6 +179,7 @@ export class InternxtFileSystem extends FileSystem {
       this.resources[path.toString(false)] = new PhysicalFileSystemResource();
     }
 
+    Logger.debug('[Opening Write Stream]: ' + path.toString(false));
     this.container.fileCreator
       .run(path.toString(false), ctx.estimatedSize)
       .then(({ stream }: { stream: Writable; upload: Promise<string> }) => {
@@ -192,6 +196,7 @@ export class InternxtFileSystem extends FileSystem {
     ctx: OpenReadStreamInfo,
     callback: ReturnCallback<Readable>
   ): void {
+    Logger.debug('[Opening Read Stream]: ' + path.toString(false));
     this.container.fileDownloader
       .run(path.toString(false))
       .then((remoteFileContents: RemoteFileContents) => {
@@ -208,7 +213,6 @@ export class InternxtFileSystem extends FileSystem {
     ctx: RenameInfo,
     callback: ReturnCallback<boolean>
   ) {
-    Logger.debug('RENAME');
     const originalItem = this.container.itemSearcher.run(
       pathFrom.toString(false)
     );
@@ -220,6 +224,7 @@ export class InternxtFileSystem extends FileSystem {
     if (originalItem.isFile()) {
       const isValidName = this.fileValidator.validatePath(pathFrom);
       if (!isValidName) return callback(Errors.UnrecognizedResource);
+      Logger.debug('[Renaming file]: ' + originalItem.path);
       this.container.fileRenamer.run(
         originalItem,
         ctx.destinationPath.toString(false)
@@ -227,6 +232,8 @@ export class InternxtFileSystem extends FileSystem {
     }
 
     if (originalItem.isFolder()) {
+      Logger.debug('[Renaming folder]: ' + originalItem.path);
+
       this.container.folderRenamer.run(
         originalItem,
         ctx.destinationPath.toString(false)

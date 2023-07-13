@@ -15,7 +15,8 @@ import { WebdavIpc } from '../../../../ipc';
 import { RemoteItemsGenerator } from '../../../items/application/RemoteItemsGenerator';
 import { FileStatuses } from '../../domain/FileStatus';
 import { Crypt } from '../../../shared/domain/Crypt';
-
+import { Stopwatch } from 'shared/types/Stopwatch';
+import Logger from 'electron-log';
 export class HttpWebdavFileRepository implements WebdavFileRepository {
   private files: Record<string, WebdavFile> = {};
 
@@ -37,8 +38,14 @@ export class HttpWebdavFileRepository implements WebdavFileRepository {
   }
 
   public async init(): Promise<void> {
+    const stopWatch = new Stopwatch();
+    stopWatch.start();
     const raw = await this.getTree();
+    stopWatch.finish();
 
+    Logger.info(
+      `WebdavFileRepository tree generated in ${stopWatch.elapsedTime()}`
+    );
     this.traverser.reset();
     const all = this.traverser.run(raw);
 
@@ -75,7 +82,8 @@ export class HttpWebdavFileRepository implements WebdavFileRepository {
 
     if (result.status === 200) {
       delete this.files[file.path];
-      await this.ipc.invoke('START_REMOTE_SYNC');
+
+      await this.ipc.invoke('UPDATE_ITEM');
     }
   }
 
@@ -123,8 +131,6 @@ export class HttpWebdavFileRepository implements WebdavFileRepository {
     });
 
     this.files[file.path] = created;
-
-    await this.ipc.invoke('START_REMOTE_SYNC');
   }
 
   async updateName(file: WebdavFile): Promise<void> {
@@ -153,8 +159,6 @@ export class HttpWebdavFileRepository implements WebdavFileRepository {
     }
 
     this.files[file.path] = WebdavFile.from(file.attributes());
-
-    await this.ipc.invoke('START_REMOTE_SYNC');
   }
 
   async updateParentDir(item: WebdavFile): Promise<void> {
@@ -171,8 +175,6 @@ export class HttpWebdavFileRepository implements WebdavFileRepository {
     }
 
     await this.init();
-
-    await this.ipc.invoke('START_REMOTE_SYNC');
   }
 
   async searchOnFolder(folderId: number): Promise<Array<WebdavFile>> {

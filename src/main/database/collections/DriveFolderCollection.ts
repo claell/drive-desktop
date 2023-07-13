@@ -21,6 +21,14 @@ export class DriveFoldersCollection
     };
   }
 
+  async getById(id: DriveFolder['id']) {
+    const match = await this.repository.findOneBy({ id });
+    return {
+      success: true,
+      result: match,
+    };
+  }
+
   async getAll() {
     try {
       const result = await this.repository.find();
@@ -47,6 +55,20 @@ export class DriveFoldersCollection
     return {
       success: match.affected ? true : false,
       result: (await this.get(uuid)).result,
+    };
+  }
+
+  async updateById(id: DriveFolder['id'], updatePayload: Partial<DriveFolder>) {
+    const match = await this.repository.update(
+      {
+        id,
+      },
+      updatePayload
+    );
+
+    return {
+      success: match.affected ? true : false,
+      result: (await this.getById(id)).result,
     };
   }
 

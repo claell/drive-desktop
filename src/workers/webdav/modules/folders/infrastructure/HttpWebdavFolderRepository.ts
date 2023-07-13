@@ -43,6 +43,7 @@ export class HttpWebdavFolderRepository implements WebdavFolderRepository {
           value.isFolder() && value.hasStatus(FolderStatuses.EXISTS)
       ) as Array<[string, WebdavFolder]>;
 
+      Logger.info('Generated folders', JSON.stringify(raw, null, 2));
       this.folders = folders.reduce((items, [key, value]) => {
         items[key] = value;
         return items;
@@ -91,12 +92,15 @@ export class HttpWebdavFolderRepository implements WebdavFolderRepository {
     });
 
     this.folders[path.value] = folder;
-    await this.ipc.invoke('START_REMOTE_SYNC');
 
     return folder;
   }
 
   async updateName(folder: WebdavFolder): Promise<void> {
+    await this.ipc.invoke('UPDATE_FOLDER_IN_LOCAL_DB', {
+      folderId: folder.id,
+      name: folder.name,
+    });
     const url = `${process.env.API_URL}/api/storage/folder/${folder.id}/meta`;
 
     const body: UpdateFolderNameDTO = {
@@ -114,7 +118,6 @@ export class HttpWebdavFolderRepository implements WebdavFolderRepository {
 
     delete this.folders[folder.path];
     this.folders[folder.path] = folder;
-    await this.ipc.invoke('START_REMOTE_SYNC');
   }
 
   async updateParentDir(folder: WebdavFolder): Promise<void> {
@@ -137,6 +140,10 @@ export class HttpWebdavFolderRepository implements WebdavFolderRepository {
   }
 
   async trash(folder: WebdavFolder): Promise<void> {
+    await this.ipc.invoke('UPDATE_FOLDER_IN_LOCAL_DB', {
+      folderId: folder.id,
+      status: 'TRASHED',
+    });
     const result = await this.trashClient.post(
       `${process.env.NEW_DRIVE_URL}/drive/storage/trash/add`,
       {
@@ -146,6 +153,7 @@ export class HttpWebdavFolderRepository implements WebdavFolderRepository {
 
     if (result.status === 200) {
       delete this.folders[folder.path];
+
       return;
     }
 
@@ -154,7 +162,5 @@ export class HttpWebdavFolderRepository implements WebdavFolderRepository {
       result.status,
       result.statusText
     );
-
-    await this.ipc.invoke('START_REMOTE_SYNC');
   }
 }

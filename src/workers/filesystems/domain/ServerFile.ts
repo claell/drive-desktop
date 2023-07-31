@@ -11,6 +11,7 @@ export type ServerFile = {
   fileId: string;
   folderId: number;
   id: number;
+  uuid: string;
   modificationTime: string;
   name: string;
   size: number;

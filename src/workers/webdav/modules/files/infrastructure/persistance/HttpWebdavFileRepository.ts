@@ -32,17 +32,13 @@ export class HttpWebdavFileRepository implements WebdavFileRepository {
   oldFileIsBeingUpdated(newFile: WebdavFile) {
     const oldFiles = Object.values(this.optimisticFiles);
 
-    return oldFiles.find((oldFile) => oldFile.fileId === newFile.fileId)
-      ? true
-      : false;
+    return oldFiles.find((oldFile) => oldFile.id === newFile.id) ? true : false;
   }
 
   cleanOptimisticFiles(newFile: WebdavFile) {
     const optimisticFiles = Object.values(this.optimisticFiles);
 
-    const oldFile = optimisticFiles.find(
-      (files) => files.fileId === newFile.fileId
-    );
+    const oldFile = optimisticFiles.find((files) => files.id === newFile.id);
 
     if (oldFile && newFile.updatedAt.getTime() > oldFile?.updatedAt.getTime()) {
       delete this.optimisticFiles[oldFile.path.value];
@@ -120,7 +116,7 @@ export class HttpWebdavFileRepository implements WebdavFileRepository {
           items: [
             {
               type: 'file',
-              id: file.fileId,
+              id: file.id,
             },
           ],
         }
@@ -151,8 +147,8 @@ export class HttpWebdavFileRepository implements WebdavFileRepository {
         file: {
           bucket: this.bucket,
           encrypt_version: '03-aes',
-          fileId: file.fileId,
-          file_id: file.fileId,
+          fileId: file.id,
+          file_id: file.id,
           folder_id: file.folderId,
           name: encryptedName,
           plain_name: file.name,
@@ -174,6 +170,8 @@ export class HttpWebdavFileRepository implements WebdavFileRepository {
 
       const created = WebdavFile.from({
         ...result.data,
+        id: result.data.uuid,
+        contentsId: result.data.fileId,
         folderId: result.data.folder_id,
         size: parseInt(result.data.size, 10),
         path: file.path.value,
@@ -208,7 +206,7 @@ export class HttpWebdavFileRepository implements WebdavFileRepository {
         delete this.optimisticFiles[file.lastPath.value];
       }
       this.optimisticFiles[file.path.value] = file;
-      const url = `${process.env.API_URL}/api/storage/file/${file.fileId}/meta`;
+      const url = `${process.env.API_URL}/api/storage/file/${file.id}/meta`;
 
       const body: UpdateFileNameDTO = {
         metadata: { itemName: file.name },
@@ -241,7 +239,7 @@ export class HttpWebdavFileRepository implements WebdavFileRepository {
       const url = `${process.env.API_URL}/api/storage/move/file`;
       const body: UpdateFileParentDirDTO = {
         destination: item.folderId,
-        fileId: item.fileId,
+        fileId: item.id,
       };
 
       const res = await this.httpClient.post(url, body);

@@ -28,7 +28,7 @@ export class EnvironmentContentFileDownloader implements ContentFileDownloader {
     return new Promise((resolve, reject) => {
       this.fn(
         this.bucket,
-        file.fileId,
+        file.id,
         {
           progressCallback: (progress: number) => {
             this.eventEmitter.emit('progress', progress);

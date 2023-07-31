@@ -1,13 +1,14 @@
 import { Readable } from 'stream';
+import { FileId } from './FileId';
 
 export interface ContentsCacheRepository {
-  exists(fileId: string): boolean;
+  exists(fileId: FileId): boolean;
 
-  read(fileId: string): Readable;
+  read(fileId: FileId): Readable;
 
-  write(fileId: string, content: Readable, size: number): Promise<void>;
+  write(fileId: FileId, content: Readable, size: number): Promise<void>;
 
-  delete(fileId: string): Promise<void>;
+  delete(fileId: FileId): Promise<void>;
 
   usage(): Promise<number>;
 }

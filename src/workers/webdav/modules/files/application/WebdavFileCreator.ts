@@ -11,6 +11,8 @@ import { FileSize } from '../domain/FileSize';
 import { WebdavServerEventBus } from '../../shared/domain/WebdavServerEventBus';
 import { ContentFileUploader } from '../domain/ContentFileUploader';
 import { WebdavIpc } from '../../../ipc';
+import { FileId } from '../domain/FileId';
+import { ContentsId } from '../domain/ContentsId';
 
 export class WebdavFileCreator {
   constructor(
@@ -75,12 +77,12 @@ export class WebdavFileCreator {
   }
 
   private async createFileEntry(
-    fileId: string,
+    contentsId: ContentsId,
     folder: WebdavFolder,
     size: number,
     filePath: FilePath
   ): Promise<WebdavFile> {
-    const file = WebdavFile.create(fileId, folder, size, filePath);
+    const file = WebdavFile.create(contentsId, folder, size, filePath);
 
     await this.repository.add(file);
 
@@ -91,13 +93,7 @@ export class WebdavFileCreator {
     return file;
   }
 
-  async run(
-    path: string,
-    size: number
-  ): Promise<{
-    stream: Writable;
-    upload: Promise<WebdavFile['fileId']>;
-  }> {
+  async run(path: string, size: number): Promise<Writable> {
     const fileSize = new FileSize(size);
     const filePath = new FilePath(path);
 
@@ -123,8 +119,8 @@ export class WebdavFileCreator {
     const upload = uploader.upload(stream, fileSize.value);
 
     upload
-      .then(async (fileId) => {
-        return this.createFileEntry(fileId, folder, size, filePath);
+      .then(async (id) => {
+        return this.createFileEntry(id, folder, size, filePath);
       })
       .catch((error: Error) => {
         this.ipc.send('WEBDAV_FILE_UPLOAD_ERROR', {
@@ -137,9 +133,6 @@ export class WebdavFileCreator {
         });
       });
 
-    return {
-      stream,
-      upload,
-    };
+    return stream;
   }
 }

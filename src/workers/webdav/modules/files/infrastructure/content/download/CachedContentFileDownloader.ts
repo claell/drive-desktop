@@ -23,22 +23,18 @@ export class CachedContentFileDownloader implements ContentFileDownloader {
   }
 
   async download(file: WebdavFile): Promise<Readable> {
-    const isCached = await this.cachedRepository.exists(file.fileId);
+    const isCached = await this.cachedRepository.exists(file.id);
 
     if (isCached) {
-      Logger.info(
-        `File with id ${file.fileId} is cached. Skiping downloading it.`
-      );
-      return this.cachedRepository.read(file.fileId);
+      Logger.info(`File with id ${file.id} is cached. Skiping downloading it.`);
+      return this.cachedRepository.read(file.id);
     }
 
     const contents = await this.fileDownloader.download(file);
 
-    this.cachedRepository
-      .write(file.fileId, contents, file.size)
-      .catch((error) => {
-        Logger.error('Error caching file: ', file.fileId, error);
-      });
+    this.cachedRepository.write(file.id, contents, file.size).catch((error) => {
+      Logger.error('Error caching file: ', file.id, error);
+    });
 
     return contents;
   }

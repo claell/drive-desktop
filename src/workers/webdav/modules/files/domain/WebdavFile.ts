@@ -9,9 +9,12 @@ import { FileNameShouldDifferFromOriginalError } from './errors/FileNameShouldDi
 import { FileActionCannotModifyExtension } from './errors/FileActionCannotModifyExtension';
 import { FileDeletedDomainEvent } from './FileDeletedDomainEvent';
 import { FileStatus, FileStatuses } from './FileStatus';
+import { FileId } from './FileId';
+import { ContentsId } from './ContentsId';
 
 export type WebdavFileAtributes = {
-  fileId: string;
+  id: string;
+  contentsId: string;
   folderId: number;
   createdAt: string;
   modificationTime: string;
@@ -24,7 +27,8 @@ export type WebdavFileAtributes = {
 export class WebdavFile extends AggregateRoot {
   private _lastPath: FilePath | null = null;
   private constructor(
-    public fileId: string,
+    private _id: FileId,
+    private _contentsId: ContentsId,
     private _folderId: number,
     private _path: FilePath,
     private readonly _size: FileSize,
@@ -33,6 +37,14 @@ export class WebdavFile extends AggregateRoot {
     private _status: FileStatus
   ) {
     super();
+  }
+
+  public get id(): string {
+    return this._id.value;
+  }
+
+  public get contentsId(): string {
+    return this._contentsId.value;
   }
 
   public get folderId() {
@@ -73,7 +85,8 @@ export class WebdavFile extends AggregateRoot {
 
   static from(attributes: WebdavFileAtributes): WebdavFile {
     return new WebdavFile(
-      attributes.fileId,
+      new FileId(attributes.id),
+      new ContentsId(attributes.id),
       attributes.folderId,
       new FilePath(attributes.path),
       new FileSize(attributes.size),
@@ -84,13 +97,16 @@ export class WebdavFile extends AggregateRoot {
   }
 
   static create(
-    fileId: string,
+    contentsId: ContentsId,
     folder: WebdavFolder,
     size: number,
     path: FilePath
   ): WebdavFile {
+    const id = FileId.random();
+
     const file = new WebdavFile(
-      fileId,
+      id,
+      contentsId,
       folder.id,
       path,
       new FileSize(size),
@@ -101,7 +117,7 @@ export class WebdavFile extends AggregateRoot {
 
     file.record(
       new FileCreatedDomainEvent({
-        aggregateId: fileId,
+        aggregateId: id.value,
         size,
         type: path.extension(),
       })
@@ -115,7 +131,7 @@ export class WebdavFile extends AggregateRoot {
 
     this.record(
       new FileDeletedDomainEvent({
-        aggregateId: this.fileId,
+        aggregateId: this.id,
         size: this._size.value,
       })
     );
@@ -133,7 +149,7 @@ export class WebdavFile extends AggregateRoot {
     //TODO: record file moved event
   }
 
-  clone(fileId: string, folderId: number, newPath: FilePath) {
+  clone(contentsId: ContentsId, folderId: number, newPath: FilePath) {
     // if (!this._path.hasSameDirname(newPath)) {
     //   throw new FileActionOnlyCanAffectOneLevelError('clone');
     // }
@@ -142,8 +158,11 @@ export class WebdavFile extends AggregateRoot {
     //   throw new FileNameShouldDifferFromOriginalError('clone');
     // }
 
+    const id = FileId.random();
+
     const file = new WebdavFile(
-      fileId,
+      id,
+      contentsId,
       folderId,
       newPath,
       this._size,
@@ -154,7 +173,7 @@ export class WebdavFile extends AggregateRoot {
 
     file.record(
       new FileCreatedDomainEvent({
-        aggregateId: fileId,
+        aggregateId: id.value,
         size: this._size.value,
         type: this._path.extension(),
       })
@@ -163,9 +182,11 @@ export class WebdavFile extends AggregateRoot {
     return file;
   }
 
-  overwrite(fileId: string, folderId: number, newPath: FilePath) {
+  overwrite(contentsId: ContentsId, folderId: number, newPath: FilePath) {
+    const id = FileId.random();
     const file = new WebdavFile(
-      fileId,
+      id,
+      contentsId,
       folderId,
       newPath,
       this._size,
@@ -176,7 +197,7 @@ export class WebdavFile extends AggregateRoot {
 
     file.record(
       new FileCreatedDomainEvent({
-        aggregateId: fileId,
+        aggregateId: contentsId.value,
         size: this._size.value,
         type: this._path.extension(),
       })
@@ -224,7 +245,7 @@ export class WebdavFile extends AggregateRoot {
     attributes: Partial<
       Pick<
         WebdavFileAtributes,
-        'path' | 'createdAt' | 'updatedAt' | 'fileId' | 'folderId' | 'status'
+        'path' | 'createdAt' | 'updatedAt' | 'folderId' | 'status'
       >
     >
   ) {
@@ -240,10 +261,6 @@ export class WebdavFile extends AggregateRoot {
       this.updatedAt = new Date(attributes.updatedAt);
     }
 
-    if (attributes.fileId) {
-      this.fileId = attributes.fileId;
-    }
-
     if (attributes.folderId) {
       this._folderId = attributes.folderId;
     }
@@ -257,7 +274,7 @@ export class WebdavFile extends AggregateRoot {
 
   toPrimitives() {
     return {
-      fileId: this.fileId,
+      fileId: this.id,
       folderId: this.folderId,
       createdAt: this.createdAt.getDate(),
       path: this._path.value,
@@ -268,7 +285,8 @@ export class WebdavFile extends AggregateRoot {
 
   attributes(): WebdavFileAtributes {
     return {
-      fileId: this.fileId,
+      id: this.id,
+      contentsId: this.contentsId,
       folderId: this.folderId,
       createdAt: this.createdAt.toISOString(),
       path: this._path.value,

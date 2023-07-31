@@ -69,7 +69,7 @@ export class Traverser {
         if (file.status === ServerFileStatus.EXISTS) {
           this.collection[name] = WebdavFile.from({
             folderId: file.folderId,
-            fileId: file.fileId,
+            id: file.uuid,
             modificationTime: file.modificationTime,
             size: file.size,
             createdAt: file.createdAt,

@@ -15,7 +15,7 @@ export class RemoteFileContents extends AggregateRoot {
 
   static preview(file: WebdavFile, contents: Readable): RemoteFileContents {
     const remoteContents = new RemoteFileContents(
-      file.fileId,
+      file.id,
       file.size,
       file.type,
       contents

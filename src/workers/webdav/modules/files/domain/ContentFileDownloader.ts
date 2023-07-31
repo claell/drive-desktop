@@ -1,10 +1,11 @@
 import { Readable } from 'stream';
-import { WebdavFile, WebdavFileAtributes } from './WebdavFile';
+import { FileId } from './FileId';
+import { WebdavFile } from './WebdavFile';
 
 export type FileDownloadEvents = {
   start: () => void;
   progress: (progress: number) => void;
-  finish: (fileId: WebdavFileAtributes['fileId']) => void;
+  finish: (fileId: FileId) => void;
   error: (error: Error) => void;
 };
 

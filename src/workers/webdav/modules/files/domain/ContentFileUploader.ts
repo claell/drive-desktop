@@ -1,16 +1,15 @@
 import { Readable } from 'stream';
-
-type FileId = string;
+import { ContentsId } from './ContentsId';
 
 export type FileUploadEvents = {
   start: () => void;
   progress: (progress: number) => void;
-  finish: (fileId: FileId) => void;
+  finish: (contentsId: ContentsId) => void;
   error: (error: Error) => void;
 };
 
 export interface ContentFileUploader {
-  upload(contents: Readable, size: number): Promise<FileId>;
+  upload(contents: Readable, size: number): Promise<ContentsId>;
 
   on(
     event: keyof FileUploadEvents,

@@ -147,8 +147,8 @@ export class HttpWebdavFileRepository implements WebdavFileRepository {
         file: {
           bucket: this.bucket,
           encrypt_version: '03-aes',
-          fileId: file.id,
-          file_id: file.id,
+          fileId: file.contentsId,
+          file_id: file.contentsId,
           folder_id: file.folderId,
           name: encryptedName,
           plain_name: file.name,

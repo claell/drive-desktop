@@ -5,6 +5,7 @@ import { VirtualDrive } from 'virtual-drive/dist';
 import packageJson from '../../../package.json';
 import { BindingsManager } from './BindingManager';
 import fs from 'fs/promises';
+import { run } from './shellIntegration';
 
 async function ensureTheFolderExist(path: string) {
   try {
@@ -22,6 +23,9 @@ async function setUp() {
     const virtualDrivePath = await ipcRenderer.invoke('get-virtual-drive-root');
 
     Logger.info('WATCHING ON PATH: ', virtualDrivePath);
+
+    Logger.info('SETTING UP SHELL INTEGRATION...');
+    await run();
 
     await ensureTheFolderExist(virtualDrivePath);
 

@@ -24,7 +24,7 @@ export class FileRepositoryMock implements FileRepository {
     return this.mockDelete(file);
   }
 
-  add(file: File): Promise<void> {
+  add(file: File): Promise<number> {
     return this.mockAdd(file);
   }
 

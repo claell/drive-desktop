@@ -10,7 +10,7 @@ export interface FileRepository {
 
   delete(file: File): Promise<void>;
 
-  add(file: File): Promise<void>;
+  add(file: File): Promise<number>;
 
   updateName(item: File): Promise<void>;
 

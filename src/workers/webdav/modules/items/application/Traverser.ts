@@ -71,6 +71,7 @@ export class Traverser {
         if (file.status === ServerFileStatus.EXISTS) {
           this.collection[name] = File.from({
             folderId: file.folderId,
+            autoIncrementalId: file.id,
             contentsId: file.fileId,
             modificationTime: file.modificationTime,
             size: file.size,

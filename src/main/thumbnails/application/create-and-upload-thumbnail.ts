@@ -1,21 +1,39 @@
 import Logger from 'electron-log';
 
 import { ThumbnailUploaderFactory } from '../infrastructure/ThumbnailUploaderFactory';
-import { obtainImageToThumbnailIt } from './obtain-image-to-thumbnail-it';
+import { obtainImageToThumbnail } from './obtain-image-to-thumbnail-it';
 import { reziseImage } from './resize-image';
 
-export async function createAndUploadThumbnail(id: number, name: string) {
+export async function createAndUploadThumbnail(
+  fileAutoIncrementalId: number,
+  path: string
+) {
   const uploader = ThumbnailUploaderFactory.build();
 
-  const image = await obtainImageToThumbnailIt(name);
+  const image = await obtainImageToThumbnail(path);
 
   if (!image) {
+    Logger.error(
+      '[THUMBNAIL] Could not obtain an image to createa the thumbnail'
+    );
     return;
   }
 
   const thumbnail = await reziseImage(image);
 
-  await uploader.upload(id, thumbnail).catch((err) => {
+  if (!thumbnail) {
+    Logger.error('[THUMBNAIL] Error rezising the image to a thumbnail');
+    return;
+  }
+
+  if (thumbnail.byteLength === 0) {
+    Logger.error(
+      '[THUMBNAIL] Error rezising the image to a thumbnail, result image has 0 size'
+    );
+    return;
+  }
+
+  await uploader.upload(fileAutoIncrementalId, thumbnail).catch((err) => {
     Logger.error('[THUMBNAIL] Error uploading thumbnail: ', err);
   });
 }

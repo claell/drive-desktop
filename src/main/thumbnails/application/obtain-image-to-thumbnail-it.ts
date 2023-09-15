@@ -15,13 +15,10 @@ function getExtension(pathLike: string) {
   return ext.replace('.', '');
 }
 
-export async function obtainImageToThumbnailIt(
-  name: string
+export async function obtainImageToThumbnail(
+  filePath: string
 ): Promise<Readable | undefined> {
-  const ext = getExtension(name);
-
-  const root = configStore.get('syncRoot');
-  const filePath = path.join(root, name);
+  const ext = getExtension(filePath);
 
   if (isPdfThumbnailable(ext)) {
     return extractFirstPageAsReadablePNG(filePath);

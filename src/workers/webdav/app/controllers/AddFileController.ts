@@ -2,6 +2,7 @@ import Logger from 'electron-log';
 import { ContentsUploader } from '../../modules/contents/application/ContentsUploader';
 import { FileCreator } from '../../modules/files/application/FileCreator';
 import { FilePathFromAbsolutePathCreator } from '../../modules/files/application/FilePathFromAbsolutePathCreator';
+import { ThumbnailCreator } from '../../modules/thumbnails/application/ThumbnailCreator';
 
 export type DehydratateAndCreatePlaceholder = (
   id: string,
@@ -13,7 +14,8 @@ export class AddFileController {
   constructor(
     private readonly contentsUploader: ContentsUploader,
     private readonly filePathFromAbsolutePathCreator: FilePathFromAbsolutePathCreator,
-    private readonly fileCreator: FileCreator
+    private readonly fileCreator: FileCreator,
+    private readonly thumbnailsCreator: ThumbnailCreator
   ) {}
 
   private async runAsync(
@@ -24,7 +26,12 @@ export class AddFileController {
 
     const path = this.filePathFromAbsolutePathCreator.run(absolutePath);
 
-    const file = await this.fileCreator.run(path, fileContents);
+    const { file, autoincrementailId } = await this.fileCreator.run(
+      path,
+      fileContents
+    );
+
+    void (await this.thumbnailsCreator.run(autoincrementailId, absolutePath));
 
     done(file.contentsId, file.path.value, file.size);
   }

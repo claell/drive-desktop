@@ -1,10 +1,30 @@
 // import sharp from 'sharp';
 import gm from 'gm';
-import { Readable } from 'stream';
+import { Readable, Writable, pipeline } from 'stream';
+import Logger from 'electron-log';
 
 import { ThumbnailProperties } from '../domain/ThumbnailProperties';
+import { promisify } from 'util';
+const promisifiedPipeline = promisify(pipeline);
 
-export function reziseImage(file: Readable): Buffer {
+async function convert(readable: Readable): Promise<Buffer> {
+  const bufferArray: any[] = [];
+
+  const bufferWritter = new Writable({
+    write: (chunk, _, callback) => {
+      bufferArray.push(chunk);
+      callback();
+    },
+  });
+
+  await promisifiedPipeline(readable, bufferWritter);
+
+  const buffer = Buffer.concat(bufferArray);
+
+  return buffer;
+}
+
+export function reziseImage(file: Readable): Promise<Buffer> {
   //const sharpStream = sharp({ failOn: 'error' });
   /*const promises = [];
 
@@ -20,8 +40,15 @@ export function reziseImage(file: Readable): Buffer {
 
   //file.pipe(sharpStream);
 
-  return gm(file)
-    .resize(ThumbnailProperties.dimensions, ThumbnailProperties.dimensions)
-    .stream()
-    .read() as Buffer;
+  return new Promise((resolve, reject) => {
+    gm(file)
+      .resize(ThumbnailProperties.dimensions, ThumbnailProperties.dimensions)
+      .stream((error, readable) => {
+        if (error) {
+          Logger.error('[GM]: ', error);
+          reject(error);
+        }
+        resolve(convert(readable));
+      });
+  });
 }

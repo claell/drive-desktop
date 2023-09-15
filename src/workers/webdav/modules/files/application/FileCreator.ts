@@ -16,7 +16,7 @@ export class FileCreator {
   async run(
     filePath: FilePath,
     fileContents: RemoteFileContents
-  ): Promise<File> {
+  ): Promise<{ file: File; autoincrementailId: number }> {
     const contentsId = fileContents.id;
     const size = new FileSize(fileContents.size);
 
@@ -24,10 +24,13 @@ export class FileCreator {
 
     const file = File.create(contentsId, folder, size, filePath);
 
-    await this.repository.add(file);
+    const autoincrementailId = await this.repository.add(file);
 
     await this.eventBus.publish(file.pullDomainEvents());
 
-    return file;
+    return {
+      file,
+      autoincrementailId,
+    };
   }
 }

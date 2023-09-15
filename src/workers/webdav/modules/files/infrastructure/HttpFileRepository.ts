@@ -93,7 +93,7 @@ export class HttpFileRepository implements FileRepository {
     }
   }
 
-  async add(file: File): Promise<void> {
+  async add(file: File): Promise<number> {
     const encryptedName = this.crypt.encryptName(
       file.name,
       file.folderId.toString()
@@ -139,6 +139,8 @@ export class HttpFileRepository implements FileRepository {
     this.files[file.path.value] = created;
 
     await this.ipc.invoke('START_REMOTE_SYNC');
+
+    return result.data.id;
   }
 
   async updateName(file: File): Promise<void> {

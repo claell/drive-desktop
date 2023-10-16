@@ -39,8 +39,9 @@ export class ContentsDownloader {
       });
     });
 
-    downloader.on('progress', (progress: number) => {
-      cb(true, filePath);
+    downloader.on('progress', async (progress: number) => {
+      const result = await cb(true, filePath);
+      if (result.finished) throw new Error('Download finished');
       this.ipc.send('FILE_DOWNLOADING', {
         name: file.name,
         extension: file.type,
@@ -51,6 +52,7 @@ export class ContentsDownloader {
     });
 
     downloader.on('error', (error: Error) => {
+      // cb(false, filePath);
       this.ipc.send('FILE_DOWNLOAD_ERROR', {
         name: file.name,
         extension: file.type,

@@ -5,7 +5,10 @@ import { VirtualDrive } from 'virtual-drive/dist';
 import { executeControllerWithFallback } from './callbacks-controllers/middlewares/executeControllerWithFallback';
 import { FilePlaceholderId } from './modules/placeholders/domain/FilePlaceholderId';
 
-export type CallbackDownload = (success: boolean, filePath: string) => boolean;
+export type CallbackDownload = (
+  success: boolean,
+  filePath: string
+) => Promise<{ finished: boolean; progress: number }>;
 export class BindingsManager {
   private static readonly PROVIDER_NAME = 'Internxt';
 
@@ -73,8 +76,12 @@ export class BindingsManager {
           Logger.debug('Execute Fetch Data Callback, sending path:', path);
 
           let finished = false;
+          let result;
           while (!finished) {
-            finished = callback(true, path);
+            Logger.debug('new callback', finished);
+            // eslint-disable-next-line no-await-in-loop
+            result = await callback(true, path);
+            finished = result.finished;
             Logger.debug('condition', finished);
           }
 

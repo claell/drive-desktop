@@ -40,9 +40,12 @@ describe('Contents Downloader', () => {
         new ReadableHelloWorld()
       );
 
-      await SUT.run(FileMother.any(), () => {
-        /* do nothing */
-        return true;
+      await SUT.run(FileMother.any(), async () => {
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        return {
+          finished: true,
+          progress: 0.5,
+        };
       });
 
       expect(factory.mockDownloader.onMock).toBeCalledWith(
@@ -56,8 +59,12 @@ describe('Contents Downloader', () => {
     factory.mockDownloader.mock.mockResolvedValueOnce(new ReadableHelloWorld());
 
     const file = FileMother.any();
-    await SUT.run(file, () => {
-      return true;
+    await SUT.run(file, async () => {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      return {
+        finished: true,
+        progress: 0.5,
+      };
     });
 
     expect(localWriter.writeMock).toBeCalledWith(

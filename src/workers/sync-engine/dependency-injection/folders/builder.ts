@@ -1,3 +1,4 @@
+import { LocalFolderManagementSystem } from 'workers/sync-engine/modules/folders/infrastructure/LocalFolderManagementSystem';
 import { ipcRendererSyncEngine } from '../../ipcRendererSyncEngine';
 import { AllParentFoldersStatusIsExists } from '../../modules/folders/application/AllParentFoldersStatusIsExists';
 import { FolderByPartialSearcher } from '../../modules/folders/application/FolderByPartialSearcher';
@@ -13,7 +14,6 @@ import { OfflineFolderCreator } from '../../modules/folders/application/Offline/
 import { OfflineFolderMover } from '../../modules/folders/application/Offline/OfflineFolderMover';
 import { OfflineFolderPathUpdater } from '../../modules/folders/application/Offline/OfflineFolderPathUpdater';
 import { OfflineFolderRenamer } from '../../modules/folders/application/Offline/OfflineFolderRenamer';
-import { RetrieveAllFolders } from '../../modules/folders/application/RetrieveAllFolders';
 import { SynchronizeOfflineModifications } from '../../modules/folders/application/SynchronizeOfflineModifications';
 import { SynchronizeOfflineModificationsOnFolderCreated } from '../../modules/folders/application/SynchronizeOfflineModificationsOnFolderCreated';
 import { HttpFolderRepository } from '../../modules/folders/infrastructure/HttpFolderRepository';
@@ -22,10 +22,13 @@ import { DependencyInjectionHttpClientsProvider } from '../common/clients';
 import { DependencyInjectionEventBus } from '../common/eventBus';
 import { DependencyInjectionTraverserProvider } from '../common/traverser';
 import { PlaceholderContainer } from '../placeholders/PlaceholdersContainer';
+import { SharedContainer } from '../shared/SharedContainer';
 import { FoldersContainer } from './FoldersContainer';
+import { DeleteLocalSynchedFolders } from 'workers/sync-engine/modules/folders/application/DeleteLocalSynchedFiles';
 
 export async function buildFoldersContainer(
-  placeholdersContainer: PlaceholderContainer
+  placeholdersContainer: PlaceholderContainer,
+  sharedContainer: SharedContainer
 ): Promise<FoldersContainer> {
   const clients = DependencyInjectionHttpClientsProvider.get();
   const traverser = DependencyInjectionTraverserProvider.get();
@@ -101,6 +104,15 @@ export async function buildFoldersContainer(
       synchronizeOfflineModifications
     );
 
+  const localManagementSystem = new LocalFolderManagementSystem(
+    sharedContainer.relativePathToAbsoluteConverter
+  );
+
+  const deleteLocalSynchedFolders = new DeleteLocalSynchedFolders(
+    repository,
+    localManagementSystem
+  );
+
   return {
     folderCreator,
     folderFinder,
@@ -117,6 +129,6 @@ export async function buildFoldersContainer(
       synchronizeOfflineModifications,
     },
     managedFolderRepository: repository,
-    retrieveAllFolders: new RetrieveAllFolders(repository),
+    deleteLocalSynchedFolders,
   };
 }

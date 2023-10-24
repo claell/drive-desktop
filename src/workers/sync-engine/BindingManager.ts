@@ -182,6 +182,6 @@ export class BindingsManager {
     await VirtualDrive.unregisterSyncRoot(this.paths.root);
 
     await this.container.deleteLocalSynchedFiles.run();
-    await this.container.retrieveAllFolders.run();
+    await this.container.deleteLocalSynchedFolders.run();
   }
 }

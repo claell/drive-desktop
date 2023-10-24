@@ -1,3 +1,4 @@
+import { DeleteLocalSynchedFiles } from 'workers/sync-engine/modules/files/application/DeleteLocalSynchedFiles';
 import crypt from '../../../utils/crypt';
 import { ipcRendererSyncEngine } from '../../ipcRendererSyncEngine';
 import { CreateFilePlaceholderOnDeletionFailed } from '../../modules/files/application/CreateFilePlaceholderOnDeletionFailed';
@@ -8,9 +9,7 @@ import { FileDeleter } from '../../modules/files/application/FileDeleter';
 import { FileFinderByContentsId } from '../../modules/files/application/FileFinderByContentsId';
 import { FilePathUpdater } from '../../modules/files/application/FilePathUpdater';
 import { FilePlaceholderCreatorFromContentsId } from '../../modules/files/application/FilePlaceholderCreatorFromContentsId';
-import { FileSearcher } from '../../modules/files/application/FileSearcher';
 import { LocalRepositoryRepositoryRefresher } from '../../modules/files/application/LocalRepositoryRepositoryRefresher';
-import { RetrieveAllFiles } from '../../modules/files/application/RetrieveAllFiles';
 import { SameFileWasMoved } from '../../modules/files/application/SameFileWasMoved';
 import { HttpFileRepository } from '../../modules/files/infrastructure/HttpFileRepository';
 import { DependencyInjectionHttpClientsProvider } from '../common/clients';
@@ -22,6 +21,7 @@ import { FoldersContainer } from '../folders/FoldersContainer';
 import { PlaceholderContainer } from '../placeholders/PlaceholdersContainer';
 import { SharedContainer } from '../shared/SharedContainer';
 import { FilesContainer } from './FilesContainer';
+import { LocalFileManagementSystem } from 'workers/sync-engine/modules/files/infrastructure/LocalFileManagementSystem';
 
 export async function buildFilesContainer(
   folderContainer: FoldersContainer,
@@ -87,8 +87,6 @@ export async function buildFilesContainer(
     ipcRendererSyncEngine
   );
 
-  const fileSearcher = new FileSearcher(fileRepository);
-
   const filePlaceholderCreatorFromContentsId =
     new FilePlaceholderCreatorFromContentsId(
       fileFinderByContentsId,
@@ -102,6 +100,15 @@ export async function buildFilesContainer(
 
   const fileClearer = new FileClearer(fileRepository);
 
+  const fileManagementSystem = new LocalFileManagementSystem(
+    sharedContainer.relativePathToAbsoluteConverter
+  );
+
+  const deleteLocalSynchedFiles = new DeleteLocalSynchedFiles(
+    fileRepository,
+    fileManagementSystem
+  );
+
   const container: FilesContainer = {
     fileFinderByContentsId,
     localRepositoryRefresher: localRepositoryRefresher,
@@ -109,14 +116,13 @@ export async function buildFilesContainer(
     fileByPartialSearcher,
     filePathUpdater,
     fileCreator,
-    fileSearcher,
     filePlaceholderCreatorFromContentsId: filePlaceholderCreatorFromContentsId,
     createFilePlaceholderOnDeletionFailed:
       createFilePlaceholderOnDeletionFailed,
     fileClearer,
     managedFileRepository: fileRepository,
     sameFileWasMoved,
-    retrieveAllFiles: new RetrieveAllFiles(fileRepository),
+    deleteLocalSynchedFiles,
   };
 
   return { container, subscribers: [] };

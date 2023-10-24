@@ -7,10 +7,9 @@ import { FileDeleter } from '../../modules/files/application/FileDeleter';
 import { FileFinderByContentsId } from '../../modules/files/application/FileFinderByContentsId';
 import { FilePathUpdater } from '../../modules/files/application/FilePathUpdater';
 import { FilePlaceholderCreatorFromContentsId } from '../../modules/files/application/FilePlaceholderCreatorFromContentsId';
-import { FileSearcher } from '../../modules/files/application/FileSearcher';
 import { LocalRepositoryRepositoryRefresher } from '../../modules/files/application/LocalRepositoryRepositoryRefresher';
-import { RetrieveAllFiles } from '../../modules/files/application/RetrieveAllFiles';
 import { SameFileWasMoved } from '../../modules/files/application/SameFileWasMoved';
+import { DeleteLocalSynchedFiles } from '../../modules/files/application/DeleteLocalSynchedFiles';
 
 export interface FilesContainer {
   fileFinderByContentsId: FileFinderByContentsId;
@@ -19,11 +18,10 @@ export interface FilesContainer {
   fileByPartialSearcher: FileByPartialSearcher;
   filePathUpdater: FilePathUpdater;
   fileCreator: FileCreator;
-  fileSearcher: FileSearcher;
   filePlaceholderCreatorFromContentsId: FilePlaceholderCreatorFromContentsId;
   createFilePlaceholderOnDeletionFailed: CreateFilePlaceholderOnDeletionFailed;
   fileClearer: FileClearer;
   managedFileRepository: ManagedFileRepository;
   sameFileWasMoved: SameFileWasMoved;
-  retrieveAllFiles: RetrieveAllFiles;
+  deleteLocalSynchedFiles: DeleteLocalSynchedFiles;
 }

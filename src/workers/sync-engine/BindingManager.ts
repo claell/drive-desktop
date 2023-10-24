@@ -5,7 +5,6 @@ import { VirtualDrive } from 'virtual-drive/dist';
 import { executeControllerWithFallback } from './callbacks-controllers/middlewares/executeControllerWithFallback';
 import { FilePlaceholderId } from './modules/placeholders/domain/FilePlaceholderId';
 import { ipcRendererSyncEngine } from './ipcRendererSyncEngine';
-import { PlatformPathConverter } from './modules/shared/application/PlatformPathConverter';
 
 export type CallbackDownload = (
   success: boolean,
@@ -182,23 +181,7 @@ export class BindingsManager {
   async cleanUp() {
     await VirtualDrive.unregisterSyncRoot(this.paths.root);
 
-    const files = await this.container.retrieveAllFiles.run();
-    const folders = await this.container.retrieveAllFolders.run();
-
-    const items = [...files, ...folders];
-
-    const win32AbsolutePaths = items.map((item) => {
-      const posixRelativePath = item.path.value;
-      // este path es relativo al root y en formato posix
-
-      const win32RelativePaths =
-        PlatformPathConverter.posixToWin(posixRelativePath);
-
-      return this.container.relativePathToAbsoluteConverter.run(
-        win32RelativePaths
-      );
-    });
-
-    Logger.debug('items: ', win32AbsolutePaths);
+    await this.container.deleteLocalSynchedFiles.run();
+    await this.container.retrieveAllFolders.run();
   }
 }

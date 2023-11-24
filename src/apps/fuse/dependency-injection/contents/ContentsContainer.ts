@@ -1,5 +1,5 @@
-import { DownloadContentsToPlainFile } from '../../../../context/virtual-drive/contents/application/DownloadContentsToPlainFile';
-import { LocalContentChecker } from '../../../../context/virtual-drive/contents/application/LocalContentChecker';
+import { DownloadContentsToPlainFile } from '../../../../context/virtual-drive/contents/application/download/DownloadContentsToPlainFile';
+import { LocalContentChecker } from '../../../../context/local-drive/contents/application/LocalContentChecker';
 
 export interface ContentsContainer {
   downloadContentsToPlainFile: DownloadContentsToPlainFile;

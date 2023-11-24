@@ -1,25 +1,20 @@
 import Logger from 'electron-log';
 import path from 'path';
 import { Readable } from 'stream';
-import { ensureFolderExists } from '../../../../apps/shared/fs/ensure-folder-exists';
-import { CallbackDownload } from '../../../../apps/sync-engine/BindingManager';
-import { SyncEngineIpc } from '../../../../apps/sync-engine/ipcRendererSyncEngine';
-import { File } from '../../files/domain/File';
-import { EventBus } from '../../shared/domain/EventBus';
-import { ContentsManagersFactory } from '../domain/ContentsManagersFactory';
-import { LocalFileContents } from '../domain/LocalFileContents';
-import { ContentFileDownloader } from '../domain/contentHandlers/ContentFileDownloader';
-import { LocalFileSystem } from '../domain/LocalFileSystem';
-import { LocalFileContentsDirectoryProvider } from '../../shared/domain/LocalFileContentsDirectoryProvider';
+import { ensureFolderExists } from '../../../../../apps/shared/fs/ensure-folder-exists';
+import { CallbackDownload } from '../../../../../apps/sync-engine/BindingManager';
+import { SyncEngineIpc } from '../../../../../apps/sync-engine/ipcRendererSyncEngine';
+import { File } from '../../../files/domain/File';
+import { ContentsManagersFactory } from '../../domain/ContentsManagersFactory';
+import { ContentFileDownloader } from '../../domain/contentHandlers/ContentFileDownloader';
+import { LocalFileContentsDirectoryProvider } from '../../../shared/domain/LocalFileContentsDirectoryProvider';
 
 export class ContentsDownloader {
   private readableDownloader: Readable | null;
   constructor(
     private readonly managerFactory: ContentsManagersFactory,
-    private readonly localWriter: LocalFileSystem,
     private readonly ipc: SyncEngineIpc,
-    private readonly localFileContentsDirectoryProvider: LocalFileContentsDirectoryProvider,
-    private readonly eventBus: EventBus
+    private readonly localFileContentsDirectoryProvider: LocalFileContentsDirectoryProvider
   ) {
     this.readableDownloader = null;
   }
@@ -89,24 +84,26 @@ export class ContentsDownloader {
     });
   }
 
-  async run(file: File, cb: CallbackDownload): Promise<string> {
+  async run(file: File, cb: CallbackDownload): Promise<Readable> {
     const downloader = this.managerFactory.downloader();
 
     this.registerEvents(downloader, file, cb);
 
     const readable = await downloader.download(file);
     this.readableDownloader = readable;
-    const localContents = LocalFileContents.downloadedFrom(
-      file,
-      readable,
-      downloader.elapsedTime()
-    );
 
-    const write = await this.localWriter.write(localContents);
+    return readable;
+    // const localContents = LocalContents.downloadedFrom(
+    //   file,
+    //   readable,
+    //   downloader.elapsedTime()
+    // );
 
-    const events = localContents.pullDomainEvents();
-    await this.eventBus.publish(events);
+    // const write = await this.localWriter.write(localContents);
 
-    return write;
+    // const events = localContents.pullDomainEvents();
+    // await this.eventBus.publish(events);
+
+    // return write;
   }
 }

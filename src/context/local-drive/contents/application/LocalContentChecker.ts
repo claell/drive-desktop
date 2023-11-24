@@ -1,4 +1,4 @@
-import { File } from '../../files/domain/File';
+import { File } from '../../../virtual-drive/files/domain/File';
 import { LocalFileSystem } from '../domain/LocalFileSystem';
 
 export class LocalContentChecker {

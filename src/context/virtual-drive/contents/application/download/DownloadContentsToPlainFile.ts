@@ -1,10 +1,10 @@
-import { broadcastToWindows } from '../../../../apps/main/windows';
-import { File } from '../../files/domain/File';
-import { EventBus } from '../../shared/domain/EventBus';
-import { ContentsManagersFactory } from '../domain/ContentsManagersFactory';
-import { LocalFileContents } from '../domain/LocalFileContents';
-import { LocalFileSystem } from '../domain/LocalFileSystem';
-import { ContentFileDownloader } from '../domain/contentHandlers/ContentFileDownloader';
+import { broadcastToWindows } from '../../../../../apps/main/windows';
+import { File } from '../../../files/domain/File';
+import { EventBus } from '../../../shared/domain/EventBus';
+import { ContentsManagersFactory } from '../../domain/ContentsManagersFactory';
+import { LocalContents } from '../../../../local-drive/contents/domain/LocalContents';
+import { LocalFileSystem } from '../../../../local-drive/contents/domain/LocalFileSystem';
+import { ContentFileDownloader } from '../../domain/contentHandlers/ContentFileDownloader';
 
 export class DownloadContentsToPlainFile {
   constructor(
@@ -51,7 +51,7 @@ export class DownloadContentsToPlainFile {
     this.registerEvents(downloader, file);
 
     const readable = await downloader.download(file);
-    const localContents = LocalFileContents.downloadedFrom(
+    const localContents = LocalContents.downloadedFrom(
       file,
       readable,
       downloader.elapsedTime()

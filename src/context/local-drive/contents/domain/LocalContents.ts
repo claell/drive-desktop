@@ -1,10 +1,10 @@
 import { Readable } from 'stream';
 import { AggregateRoot } from '../../../shared/domain/AggregateRoot';
-import { ContentsSize } from './ContentsSize';
-import { ContentsDownloadedDomainEvent } from './events/ContentsDownloadedDomainEvent';
-import { File } from '../../files/domain/File';
+import { ContentsSize } from '../../../virtual-drive/contents/domain/ContentsSize';
+import { ContentsDownloadedDomainEvent } from '../../../virtual-drive/contents/domain/events/ContentsDownloadedDomainEvent';
+import { File } from '../../../virtual-drive/files/domain/File';
 
-export type LocalFileContentsAttributes = {
+export type LocalContentsAttributes = {
   name: string;
   extension: string;
   size: number;
@@ -13,7 +13,7 @@ export type LocalFileContentsAttributes = {
   contents: Readable;
 };
 
-export class LocalFileContents extends AggregateRoot {
+export class LocalContents extends AggregateRoot {
   private constructor(
     private readonly _name: string,
     private readonly _extension: string,
@@ -48,8 +48,8 @@ export class LocalFileContents extends AggregateRoot {
     return this._modifiedTime;
   }
 
-  static from(attributes: LocalFileContentsAttributes): LocalFileContents {
-    const remoteContents = new LocalFileContents(
+  static from(attributes: LocalContentsAttributes): LocalContents {
+    const remoteContents = new LocalContents(
       attributes.name,
       attributes.extension,
       new ContentsSize(attributes.size),
@@ -61,8 +61,8 @@ export class LocalFileContents extends AggregateRoot {
     return remoteContents;
   }
 
-  static downloadedFrom(file: File, contents: Readable, elapsedTime: number) {
-    const remoteContents = new LocalFileContents(
+  static downloadedFrom(file: File, contents: Readable) {
+    const remoteContents = new LocalContents(
       file.name,
       file.type,
       new ContentsSize(file.size),
@@ -77,7 +77,6 @@ export class LocalFileContents extends AggregateRoot {
       extension: file.type,
       nameWithExtension: file.nameWithExtension,
       size: file.size,
-      elapsedTime: elapsedTime,
     });
 
     remoteContents.record(contentsDownloadedEvent);
@@ -85,7 +84,7 @@ export class LocalFileContents extends AggregateRoot {
     return remoteContents;
   }
 
-  attributes(): Omit<LocalFileContentsAttributes, 'contents'> {
+  attributes(): Omit<LocalContentsAttributes, 'contents'> {
     return {
       name: this.name,
       extension: this.extension,

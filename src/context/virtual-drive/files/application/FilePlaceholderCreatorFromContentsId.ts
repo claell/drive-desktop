@@ -1,6 +1,6 @@
 import { File } from '../domain/File';
 import { LocalFileSystem } from '../domain/file-systems/LocalFileSystem';
-import { FileFinderByContentsId } from './FileFinderByContentsId';
+import { FileFinderByContentsId } from './finders/FileFinderByContentsId';
 
 export class FilePlaceholderCreatorFromContentsId {
   constructor(

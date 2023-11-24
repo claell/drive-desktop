@@ -1,7 +1,7 @@
 import { CreateFilePlaceholderOnDeletionFailed } from '../../../../context/virtual-drive/files/application/CreateFilePlaceholderOnDeletionFailed';
 import { FileCreator } from '../../../../context/virtual-drive/files/application/FileCreator';
 import { FileDeleter } from '../../../../context/virtual-drive/files/application/FileDeleter';
-import { FileFinderByContentsId } from '../../../../context/virtual-drive/files/application/FileFinderByContentsId';
+import { FileFinderByContentsId } from '../../../../context/virtual-drive/files/application/finders/FileFinderByContentsId';
 import { FilePathUpdater } from '../../../../context/virtual-drive/files/application/FilePathUpdater';
 import { FilePlaceholderCreatorFromContentsId } from '../../../../context/virtual-drive/files/application/FilePlaceholderCreatorFromContentsId';
 import { FilesPlaceholderUpdater } from '../../../../context/virtual-drive/files/application/FilesPlaceholderUpdater';
@@ -9,6 +9,7 @@ import { FilesPlaceholderCreator } from '../../../../context/virtual-drive/files
 import { RepositoryPopulator } from '../../../../context/virtual-drive/files/application/RepositoryPopulator';
 import { RetrieveAllFiles } from '../../../../context/virtual-drive/files/application/RetrieveAllFiles';
 import { SameFileWasMoved } from '../../../../context/virtual-drive/files/application/SameFileWasMoved';
+import { FileFinderByPlaceholderId } from '../../../../context/virtual-drive/files/application/finders/FileFinderByPlaceholderId';
 
 export interface FilesContainer {
   fileFinderByContentsId: FileFinderByContentsId;
@@ -22,4 +23,5 @@ export interface FilesContainer {
   repositoryPopulator: RepositoryPopulator;
   filesPlaceholderCreator: FilesPlaceholderCreator;
   filesPlaceholderUpdater: FilesPlaceholderUpdater;
+  fileFinderByPlaceholderId: FileFinderByPlaceholderId;
 }

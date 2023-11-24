@@ -1,5 +1,5 @@
 import { ContentsManagersFactory } from '../../../../../src/context/virtual-drive/contents/domain/ContentsManagersFactory';
-import { LocalFileContents } from '../../../../../src/context/virtual-drive/contents/domain/LocalFileContents';
+import { LocalContents } from '../../../../../src/context/local-drive/contents/domain/LocalContents';
 import { ContentFileDownloader } from '../../../../../src/context/virtual-drive/contents/domain/contentHandlers/ContentFileDownloader';
 import { ContentFileUploader } from '../../../../../src/context/virtual-drive/contents/domain/contentHandlers/ContentFileUploader';
 import { ContentFileDownloaderMock } from './ContentFileDownloaderMock';
@@ -16,7 +16,7 @@ export class RemoteFileContentsManagersFactoryMock
   }
 
   uploader(
-    _contents: LocalFileContents,
+    _contents: LocalContents,
     _abortSignal?: AbortSignal | undefined
   ): ContentFileUploader {
     return this.mockUpload;

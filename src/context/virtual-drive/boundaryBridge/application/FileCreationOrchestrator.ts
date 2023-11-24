@@ -1,3 +1,5 @@
+import { LocalContentsReader } from '../../../local-drive/contents/application/LocalContentsReadder';
+import { LocalFileSystem } from '../../../local-drive/contents/domain/LocalFileSystem';
 import { RetryContentsUploader } from '../../contents/application/RetryContentsUploader';
 import { FileCreator } from '../../files/application/FileCreator';
 import { SameFileWasMoved } from '../../files/application/SameFileWasMoved';
@@ -8,6 +10,7 @@ export class FileCreationOrchestrator {
   constructor(
     private readonly contentsUploader: RetryContentsUploader,
     private readonly fileCreator: FileCreator,
+    private readonly localContentsReader: LocalContentsReader,
     private readonly sameFileWasMoved: SameFileWasMoved
   ) {}
 
@@ -22,7 +25,11 @@ export class FileCreationOrchestrator {
       throw new Error('File was moved here');
     }
 
-    const fileContents = await this.contentsUploader.run(posixRelativePath);
+    const { contents, abortSignal } = await this.localContentsReader.run(
+      posixRelativePath
+    );
+
+    const fileContents = await this.contentsUploader.run(contents, abortSignal);
 
     const createdFile = await this.fileCreator.run(path, fileContents);
 

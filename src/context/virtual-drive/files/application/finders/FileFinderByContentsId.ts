@@ -1,6 +1,6 @@
-import { FileNotFoundError } from '../domain/errors/FileNotFoundError';
-import { File } from '../domain/File';
-import { FileRepository } from '../domain/FileRepository';
+import { FileNotFoundError } from '../../domain/errors/FileNotFoundError';
+import { File } from '../../domain/File';
+import { FileRepository } from '../../domain/FileRepository';
 
 export class FileFinderByContentsId {
   constructor(private readonly repository: FileRepository) {}

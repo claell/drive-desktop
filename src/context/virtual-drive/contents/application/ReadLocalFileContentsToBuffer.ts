@@ -1,10 +1,10 @@
 import { Writable, pipeline } from 'stream';
-import { LocalFileContents } from '../domain/LocalFileContents';
+import { LocalContents } from '../../../local-drive/contents/domain/LocalContents';
 import { promisify } from 'util';
 const promisifiedPipeline = promisify(pipeline);
 
 export class ReadLocalFileContentsToBuffer {
-  static async run(contents: LocalFileContents): Promise<Buffer> {
+  static async run(contents: LocalContents): Promise<Buffer> {
     const bufferArray: any[] = [];
 
     const bufferWritter = new Writable({

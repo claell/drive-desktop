@@ -11,7 +11,7 @@ import { DependencyInjectionStorageSdk } from '../common/sdk';
 import { CreateFilePlaceholderOnDeletionFailed } from '../../../../context/virtual-drive/files/application/CreateFilePlaceholderOnDeletionFailed';
 import { FileCreator } from '../../../../context/virtual-drive/files/application/FileCreator';
 import { FileDeleter } from '../../../../context/virtual-drive/files/application/FileDeleter';
-import { FileFinderByContentsId } from '../../../../context/virtual-drive/files/application/FileFinderByContentsId';
+import { FileFinderByContentsId } from '../../../../context/virtual-drive/files/application/finders/FileFinderByContentsId';
 import { FilePathUpdater } from '../../../../context/virtual-drive/files/application/FilePathUpdater';
 import { FilePlaceholderCreatorFromContentsId } from '../../../../context/virtual-drive/files/application/FilePlaceholderCreatorFromContentsId';
 import { FilesPlaceholderUpdater } from '../../../../context/virtual-drive/files/application/FilesPlaceholderUpdater';
@@ -23,6 +23,7 @@ import { InMemoryFileRepository } from '../../../../context/virtual-drive/files/
 import { SDKRemoteFileSystem } from '../../../../context/virtual-drive/files/infrastructure/SDKRemoteFileSystem';
 import { NodeWinLocalFileSystem } from '../../../../context/virtual-drive/files/infrastructure/NodeWinLocalFileSystem';
 import { LocalFileIdProvider } from '../../../../context/virtual-drive/shared/application/LocalFileIdProvider';
+import { FileFinderByPlaceholderId } from '../../../../context/virtual-drive/files/application/finders/FileFinderByPlaceholderId';
 
 export async function buildFilesContainer(
   folderContainer: FoldersContainer,
@@ -107,6 +108,8 @@ export async function buildFilesContainer(
     eventHistory
   );
 
+  const fileFinderByPlaceholderId = new FileFinderByPlaceholderId(repository);
+
   const container: FilesContainer = {
     fileFinderByContentsId,
     fileDeleter,
@@ -120,6 +123,7 @@ export async function buildFilesContainer(
     repositoryPopulator: repositoryPopulator,
     filesPlaceholderCreator,
     filesPlaceholderUpdater,
+    fileFinderByPlaceholderId,
   };
 
   return { container, subscribers: [] };

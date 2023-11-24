@@ -1,13 +1,13 @@
 import { Environment } from '@internxt/inxt-js';
-import { DownloadContentsToPlainFile } from '../../../../context/virtual-drive/contents/application/DownloadContentsToPlainFile';
+import { DownloadContentsToPlainFile } from '../../../../context/virtual-drive/contents/application/download/DownloadContentsToPlainFile';
 import { ContentsContainer } from './ContentsContainer';
 import { DependencyInjectionUserProvider } from '../common/user';
 import { DependencyInjectionMnemonicProvider } from '../common/mnemonic';
 import { EnvironmentRemoteFileContentsManagersFactory } from '../../../../context/virtual-drive/contents/infrastructure/EnvironmentRemoteFileContentsManagersFactory';
-import { FSLocalFileSystem } from '../../../../context/virtual-drive/contents/infrastructure/FSLocalFileSystem';
+import { FSLocalFileSystem } from '../../../../context/local-drive/contents/infrastructure/FSLocalFileSystem';
 import { DependencyInjectionEventBus } from '../common/eventBus';
 import { FuseAppDataLocalFileContentsDirectoryProvider } from '../../../../context/virtual-drive/shared/infrastructure/LocalFileContentsDirectoryProviders/FuseAppDataLocalFileContentsDirectoryProvider';
-import { LocalContentsDeleter } from '../../../../context/virtual-drive/contents/application/LocalContentsDeleter';
+import { LocalContentsDeleter } from '../../../../context/local-drive/contents/application/LocalContentsDeleter';
 
 export async function buildContentsContainer(): Promise<ContentsContainer> {
   const user = DependencyInjectionUserProvider.get();

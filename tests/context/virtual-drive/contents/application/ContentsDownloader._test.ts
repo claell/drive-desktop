@@ -1,4 +1,4 @@
-import { ContentsDownloader } from '../../../../../src/context/virtual-drive/contents/application/ContentsDownloader';
+import { ContentsDownloader } from '../../../../../src/context/virtual-drive/contents/application/download/ContentsDownloader';
 import { FileDownloadEvents } from '../../../../../src/context/virtual-drive/contents/domain/contentHandlers/ContentFileDownloader';
 import { FileMother } from '../../files/domain/FileMother';
 import { EventBusMock } from '../../shared/__mock__/EventBusMock';

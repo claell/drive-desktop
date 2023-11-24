@@ -5,13 +5,13 @@ import { SharedContainer } from '../shared/SharedContainer';
 import { ContentsContainer } from './ContentsContainer';
 import { DependencyInjectionEventBus } from '../common/eventBus';
 import { DependencyInjectionEventRepository } from '../common/eventRepository';
-import { ContentsDownloader } from '../../../../context/virtual-drive/contents/application/ContentsDownloader';
+import { ContentsDownloader } from '../../../../context/virtual-drive/contents/application/download/ContentsDownloader';
 import { ContentsUploader } from '../../../../context/virtual-drive/contents/application/ContentsUploader';
 import { NotifyMainProcessHydrationFinished } from '../../../../context/virtual-drive/contents/application/NotifyMainProcessHydrationFinished';
 import { RetryContentsUploader } from '../../../../context/virtual-drive/contents/application/RetryContentsUploader';
 import { EnvironmentRemoteFileContentsManagersFactory } from '../../../../context/virtual-drive/contents/infrastructure/EnvironmentRemoteFileContentsManagersFactory';
 import { FSLocalFileProvider } from '../../../../context/virtual-drive/contents/infrastructure/FSLocalFileProvider';
-import { FSLocalFileSystem } from '../../../../context/virtual-drive/contents/infrastructure/FSLocalFileSystem';
+import { FSLocalFileSystem } from '../../../../context/local-drive/contents/infrastructure/FSLocalFileSystem';
 import { ipcRendererSyncEngine } from '../../ipcRendererSyncEngine';
 import { IPCLocalFileContentsDirectoryProvider } from '../../../../context/virtual-drive/shared/infrastructure/LocalFileContentsDirectoryProviders/IPCLocalFileContentsDirectoryProvider';
 

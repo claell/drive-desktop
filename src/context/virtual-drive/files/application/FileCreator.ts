@@ -3,7 +3,7 @@ import { FilePath } from '../domain/FilePath';
 import { File } from '../domain/File';
 import { FileSize } from '../domain/FileSize';
 import { EventBus } from '../../shared/domain/EventBus';
-import { RemoteFileContents } from '../../contents/domain/RemoteFileContents';
+import { VirtualContents } from '../../contents/domain/VirtualContents';
 import { FileDeleter } from './FileDeleter';
 import { PlatformPathConverter } from '../../shared/application/PlatformPathConverter';
 import { FileRepository } from '../domain/FileRepository';
@@ -21,7 +21,7 @@ export class FileCreator {
     private readonly ipc: SyncEngineIpc
   ) {}
 
-  async run(filePath: FilePath, contents: RemoteFileContents): Promise<File> {
+  async run(filePath: FilePath, contents: VirtualContents): Promise<File> {
     try {
       const existingFile = this.repository.searchByPartial({
         path: PlatformPathConverter.winToPosix(filePath.value),

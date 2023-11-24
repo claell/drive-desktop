@@ -4,7 +4,7 @@ import { ContentFileUploader } from '../domain/contentHandlers/ContentFileUpload
 import { ContentsManagersFactory } from '../domain/ContentsManagersFactory';
 import { EnvironmentContentFileDownloader } from './download/EnvironmentContentFileDownloader';
 import { EnvironmentContentFileUploader } from './upload/EnvironmentContentFileUploader';
-import { LocalFileContents } from '../domain/LocalFileContents';
+import { LocalContents } from '../../../local-drive/contents/domain/LocalContents';
 
 export class EnvironmentRemoteFileContentsManagersFactory
   implements ContentsManagersFactory
@@ -24,7 +24,7 @@ export class EnvironmentRemoteFileContentsManagersFactory
   }
 
   uploader(
-    contents: LocalFileContents,
+    contents: LocalContents,
     abortSignal?: AbortSignal
   ): ContentFileUploader {
     contents.size;

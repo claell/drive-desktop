@@ -3,7 +3,7 @@ import { FileAlreadyExistsError } from '../domain/errors/FileAlreadyExistsError'
 import { FilePath } from '../domain/FilePath';
 import { File } from '../domain/File';
 import { FolderFinder } from '../../folders/application/FolderFinder';
-import { FileFinderByContentsId } from './FileFinderByContentsId';
+import { FileFinderByContentsId } from './finders/FileFinderByContentsId';
 import { EventBus } from '../../shared/domain/EventBus';
 import { FileRepository } from '../domain/FileRepository';
 import { RemoteFileSystem } from '../domain/file-systems/RemoteFileSystem';

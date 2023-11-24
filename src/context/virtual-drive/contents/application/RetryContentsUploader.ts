@@ -1,4 +1,5 @@
-import { RemoteFileContents } from '../domain/RemoteFileContents';
+import { LocalContents } from '../../../local-drive/contents/domain/LocalContents';
+import { VirtualContents } from '../domain/VirtualContents';
 import { ContentsUploader } from './ContentsUploader';
 import Logger from 'electron-log';
 
@@ -11,7 +12,7 @@ export class RetryContentsUploader {
 
   constructor(private readonly uploader: ContentsUploader) {}
 
-  async retryUpload(asyncFunction: () => Promise<RemoteFileContents>) {
+  async retryUpload(asyncFunction: () => Promise<VirtualContents>) {
     let retryCount = 0;
 
     while (retryCount <= RetryContentsUploader.NUMBER_OF_RETRIES) {
@@ -41,12 +42,15 @@ export class RetryContentsUploader {
     );
   }
 
-  async run(posixRelativePath: string): Promise<RemoteFileContents> {
+  async run(
+    contents: LocalContents,
+    abortSignal: AbortSignal
+  ): Promise<VirtualContents> {
     await new Promise((resolve) => {
       setTimeout(resolve, RetryContentsUploader.INITIAL_DELAY);
     });
 
-    const upload = () => this.uploader.run(posixRelativePath);
+    const upload = () => this.uploader.run(contents, abortSignal);
 
     return this.retryUpload(upload);
   }

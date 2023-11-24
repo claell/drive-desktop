@@ -1,4 +1,4 @@
-import { ContentsDownloader } from '../../../../context/virtual-drive/contents/application/ContentsDownloader';
+import { ContentsDownloader } from '../../../../context/virtual-drive/contents/application/download/ContentsDownloader';
 import { NotifyMainProcessHydrationFinished } from '../../../../context/virtual-drive/contents/application/NotifyMainProcessHydrationFinished';
 import { RetryContentsUploader } from '../../../../context/virtual-drive/contents/application/RetryContentsUploader';
 import { LocalFileContentsDirectoryProvider } from '../../../../context/virtual-drive/shared/domain/LocalFileContentsDirectoryProvider';

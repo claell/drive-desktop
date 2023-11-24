@@ -1,12 +1,12 @@
 import { ContentFileDownloader } from './contentHandlers/ContentFileDownloader';
 import { ContentFileUploader } from './contentHandlers/ContentFileUploader';
-import { LocalFileContents } from './LocalFileContents';
+import { LocalContents } from '../../../local-drive/contents/domain/LocalContents';
 
 export interface ContentsManagersFactory {
   downloader(): ContentFileDownloader;
 
   uploader(
-    contents: LocalFileContents,
+    contents: LocalContents,
     abortSignal?: AbortSignal
   ): ContentFileUploader;
 }

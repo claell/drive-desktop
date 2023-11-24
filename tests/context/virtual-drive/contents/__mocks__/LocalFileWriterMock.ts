@@ -1,12 +1,12 @@
-import { LocalFileContents } from '../../../../../src/context/virtual-drive/contents/domain/LocalFileContents';
-import { LocalFileSystem } from '../../../../../src/context/virtual-drive/contents/domain/LocalFileSystem';
+import { LocalContents } from '../../../../../src/context/local-drive/contents/domain/LocalContents';
+import { LocalFileSystem } from '../../../../../src/context/local-drive/contents/domain/LocalFileSystem';
 
 export class LocalFileSystemMock implements LocalFileSystem {
   public writeMock = jest.fn();
   public removeMock = jest.fn();
   public existsMock = jest.fn();
 
-  write(contents: LocalFileContents): Promise<string> {
+  write(contents: LocalContents): Promise<string> {
     return this.writeMock(contents);
   }
   remove(path: string): Promise<void> {

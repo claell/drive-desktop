@@ -1,4 +1,4 @@
-import { FileFinderByContentsId } from '../../../../../src/context/virtual-drive/files/application/FileFinderByContentsId';
+import { FileFinderByContentsId } from '../../../../../src/context/virtual-drive/files/application/finders/FileFinderByContentsId';
 import { FilePathUpdater } from '../../../../../src/context/virtual-drive/files/application/FilePathUpdater';
 import { FilePath } from '../../../../../src/context/virtual-drive/files/domain/FilePath';
 import { FolderFinder } from '../../../../../src/context/virtual-drive/folders/application/FolderFinder';

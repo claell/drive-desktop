@@ -7,7 +7,6 @@ export class ContentsDownloadedDomainEvent extends DomainEvent {
   readonly extension: string;
   readonly nameWithExtension: string;
   readonly size: number;
-  readonly elapsedTime: number;
 
   constructor({
     aggregateId,
@@ -16,14 +15,12 @@ export class ContentsDownloadedDomainEvent extends DomainEvent {
     extension,
     nameWithExtension,
     size,
-    elapsedTime,
   }: {
     aggregateId: string;
     name: string;
     extension: string;
     nameWithExtension: string;
     size: number;
-    elapsedTime: number;
     eventId?: string;
   }) {
     super({
@@ -36,7 +33,6 @@ export class ContentsDownloadedDomainEvent extends DomainEvent {
     this.extension = extension;
     this.nameWithExtension = nameWithExtension;
     this.size = size;
-    this.elapsedTime = elapsedTime;
   }
 
   toPrimitives() {
@@ -47,7 +43,6 @@ export class ContentsDownloadedDomainEvent extends DomainEvent {
       extension: this.extension,
       nameWithExtension: this.nameWithExtension,
       size: this.size,
-      elapsedTime: this.elapsedTime,
     };
   }
 }

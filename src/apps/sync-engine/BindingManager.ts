@@ -89,14 +89,8 @@ export class BindingsManager {
             callback
           );
           Logger.debug('Execute Fetch Data Callback, sending path:', path);
-          const file = controllers.downloadFile.fileFinderByContentsId(
+          const file = await this.container.fileFinderByPlaceholderId.run(
             contentsId
-              .replace(
-                // eslint-disable-next-line no-control-regex
-                /[\x00-\x1F\x7F-\x9F]/g,
-                ''
-              )
-              .split(':')[1]
           );
           let finished = false;
           while (!finished) {

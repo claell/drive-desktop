@@ -1,14 +1,17 @@
 import Logger from 'electron-log';
-import { ContentsDownloader } from '../../../../context/virtual-drive/contents/application/ContentsDownloader';
-import { FileFinderByContentsId } from '../../../../context/virtual-drive/files/application/FileFinderByContentsId';
+import { ContentsDownloader } from '../../../../context/virtual-drive/contents/application/download/ContentsDownloader';
+import { FileFinderByContentsId } from '../../../../context/virtual-drive/files/application/finders/FileFinderByContentsId';
 import { FilePlaceholderId } from '../../../../context/virtual-drive/files/domain/PlaceholderId';
 import { CallbackDownload } from '../../BindingManager';
 import { CallbackController } from './CallbackController';
+import { LocalContentsWriter } from '../../../../context/local-drive/contents/application/LocalContentsWriter';
+import { LocalContents } from '../../../../context/local-drive/contents/domain/LocalContents';
 
 export class DownloadFileController extends CallbackController {
   constructor(
     private readonly fileFinder: FileFinderByContentsId,
-    private readonly downloader: ContentsDownloader
+    private readonly downloader: ContentsDownloader,
+    private readonly localContentsWriter: LocalContentsWriter
   ) {
     super();
   }
@@ -16,11 +19,13 @@ export class DownloadFileController extends CallbackController {
   private async action(id: string, cb: CallbackDownload): Promise<string> {
     const file = this.fileFinder.run(id);
 
-    return await this.downloader.run(file, cb);
-  }
+    const readable = await this.downloader.run(file, cb);
 
-  fileFinderByContentsId(contentsId: string) {
-    return this.fileFinder.run(contentsId);
+    const localContents = LocalContents.downloadedFrom(file, readable);
+
+    await this.localContentsWriter.run(localContents);
+
+    return file.path;
   }
 
   async execute(

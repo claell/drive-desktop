@@ -1,7 +1,7 @@
-import { FileFinderByContentsId } from '../../../../../src/context/virtual-drive/files/application/finders/FileFinderByContentsId';
-import { FilePathUpdater } from '../../../../../src/context/virtual-drive/files/application/FilePathUpdater';
-import { FilePath } from '../../../../../src/context/virtual-drive/files/domain/FilePath';
-import { FolderFinder } from '../../../../../src/context/virtual-drive/folders/application/FolderFinder';
+import { FilePathUpdater } from '../../../../../src/context/drive/files/application/FilePathUpdater';
+import { FileFinderByContentsId } from '../../../../../src/context/drive/files/application/finders/FileFinderByContentsId';
+import { FilePath } from '../../../../../src/context/drive/files/domain/FilePath';
+import { FolderFinder } from '../../../../../src/context/drive/folders/application/FolderFinder';
 import { FolderFinderMock } from '../../folders/__mocks__/FolderFinderMock';
 import { FolderMother } from '../../folders/domain/FolderMother';
 import { EventBusMock } from '../../shared/__mock__/EventBusMock';
@@ -55,7 +55,7 @@ describe('File path updater', () => {
 
     await SUT.run(fileToRename.contentsId, destination.value);
 
-    expect(repository.updateMock).toBeCalledWith(
+    expect(repository.upsertMock).toBeCalledWith(
       expect.objectContaining({ path: destination.value })
     );
     expect(remoteFileSystemMock.renameMock).toBeCalledWith(
@@ -104,7 +104,7 @@ describe('File path updater', () => {
 
     await SUT.run(fileToMove.contentsId, destination.value);
 
-    expect(repository.updateMock).toBeCalledWith(
+    expect(repository.upsertMock).toBeCalledWith(
       expect.objectContaining({
         folderId: destinationFolder.id,
         path: destination.value,

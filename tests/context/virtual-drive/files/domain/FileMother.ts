@@ -1,6 +1,8 @@
-import { FileAttributes } from '../../../../../src/context/virtual-drive/files/domain/File';
-import { FileStatuses } from '../../../../../src/context/virtual-drive/files/domain/FileStatus';
-import { File } from '../../../../../src/context/virtual-drive/files/domain/File';
+import {
+  FileAttributes,
+  File,
+} from '../../../../../src/context/drive/files/domain/File';
+import { FileStatuses } from '../../../../../src/context/drive/files/domain/FileStatus';
 import { ContentsIdMother } from '../../contents/domain/ContentsIdMother';
 import { FilePathMother } from './FilePathMother';
 import Chance from 'chance';

@@ -1,8 +1,6 @@
-import {
-  Folder,
-  FolderAttributes,
-} from '../../../../../src/context/virtual-drive/folders/domain/Folder';
-import { FolderRepository } from '../../../../../src/context/virtual-drive/folders/domain/FolderRepository';
+import { Folder } from '../../../../../src/context/drive/folders/domain/Folder';
+import { FolderAttributes } from '../../../../../src/context/drive/folders/domain/Folder';
+import { FolderRepository } from '../../../../../src/context/drive/folders/domain/FolderRepository';
 
 export class FolderRepositoryMock implements FolderRepository {
   public readonly allMock = jest.fn();

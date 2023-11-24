@@ -1,5 +1,5 @@
-import { FolderCreator } from '../../../../../src/context/virtual-drive/folders/application/FolderCreator';
-import { Folder } from '../../../../../src/context/virtual-drive/folders/domain/Folder';
+import { Folder } from '../../../../../src/context/drive/folders/domain/Folder';
+import { FolderCreator } from '../../../../../src/context/drive/folders/application/FolderCreator';
 import { EventBusMock } from '../../shared/__mock__/EventBusMock';
 import { IpcRendererSyncEngineMock } from '../../shared/__mock__/IpcRendererSyncEngineMock';
 import { FolderRemoteFileSystemMock } from '../__mocks__/FolderRemoteFileSystemMock';

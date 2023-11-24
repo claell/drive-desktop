@@ -1,5 +1,5 @@
-import { FolderFinder } from '../../../../../src/context/virtual-drive/folders/application/FolderFinder';
-import { Folder } from '../../../../../src/context/virtual-drive/folders/domain/Folder';
+import { Folder } from '../../../../../src/context/drive/folders/domain/Folder';
+import { FolderFinder } from '../../../../../src/context/drive/folders/application/FolderFinder';
 import { FolderMother } from '../domain/FolderMother';
 import { FolderRepositoryMock } from './FolderRepositoryMock';
 

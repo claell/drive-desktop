@@ -1,4 +1,4 @@
-import { FileDeleter } from '../../../../../src/context/virtual-drive/files/application/FileDeleter';
+import { FileDeleter } from '../../../../../src/context/drive/files/application/FileDeleter';
 
 export class FileDeleterFactory {
   static deletionSucces(): FileDeleter {

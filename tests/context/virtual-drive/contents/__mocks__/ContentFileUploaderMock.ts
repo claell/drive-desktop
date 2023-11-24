@@ -2,8 +2,8 @@ import { Readable } from 'stream';
 import {
   ContentFileUploader,
   FileUploadEvents,
-} from '../../../../../src/context/virtual-drive/contents/domain/contentHandlers/ContentFileUploader';
-import { ContentsId } from '../../../../../src/context/virtual-drive/contents/domain/ContentsId';
+} from '../../../../../src/context/drive/contents/domain/contentHandlers/ContentFileUploader';
+import { ContentsId } from '../../../../../src/context/drive/contents/domain/ContentsId';
 
 export class ContentFileUploaderMock implements ContentFileUploader {
   uploadMock = jest.fn();

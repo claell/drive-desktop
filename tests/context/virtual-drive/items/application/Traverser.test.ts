@@ -1,3 +1,4 @@
+import { Traverser } from '../../../../../src/context/drive/items/application/Traverser';
 import {
   ServerFile,
   ServerFileStatus,
@@ -6,7 +7,6 @@ import {
   ServerFolderStatus,
   ServerFolder,
 } from '../../../../../src/context/shared/domain/ServerFolder';
-import { Traverser } from '../../../../../src/context/virtual-drive/items/application/Traverser';
 import { ContentsIdMother } from '../../contents/domain/ContentsIdMother';
 import { FakeNameDecrypt } from '../infrastructure/FakeNameDecrypt';
 

@@ -1,4 +1,4 @@
-import { Crypt } from '../../../../../src/context/virtual-drive/shared/domain/Crypt';
+import { Crypt } from '../../../../../src/context/drive/shared/domain/Crypt';
 
 export const fakeDecryptor: Crypt = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -1,5 +1,5 @@
-import { AllParentFoldersStatusIsExists } from '../../../../../src/context/virtual-drive/folders/application/AllParentFoldersStatusIsExists';
-import { FolderDeleter } from '../../../../../src/context/virtual-drive/folders/application/FolderDeleter';
+import { AllParentFoldersStatusIsExists } from '../../../../../src/context/drive/folders/application/AllParentFoldersStatusIsExists';
+import { FolderDeleter } from '../../../../../src/context/drive/folders/application/FolderDeleter';
 import { FolderLocalFileSystemMock } from '../__mocks__/FolderLocalFileSystemMock';
 import { FolderRemoteFileSystemMock } from '../__mocks__/FolderRemoteFileSystemMock';
 import { FolderRepositoryMock } from '../__mocks__/FolderRepositoryMock';

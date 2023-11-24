@@ -1,7 +1,7 @@
-import { ContentsManagersFactory } from '../../../../../src/context/virtual-drive/contents/domain/ContentsManagersFactory';
+import { ContentsManagersFactory } from '../../../../../src/context/drive/contents/domain/ContentsManagersFactory';
+import { ContentFileDownloader } from '../../../../../src/context/drive/contents/domain/contentHandlers/ContentFileDownloader';
+import { ContentFileUploader } from '../../../../../src/context/drive/contents/domain/contentHandlers/ContentFileUploader';
 import { LocalContents } from '../../../../../src/context/local-drive/contents/domain/LocalContents';
-import { ContentFileDownloader } from '../../../../../src/context/virtual-drive/contents/domain/contentHandlers/ContentFileDownloader';
-import { ContentFileUploader } from '../../../../../src/context/virtual-drive/contents/domain/contentHandlers/ContentFileUploader';
 import { ContentFileDownloaderMock } from './ContentFileDownloaderMock';
 import { ContentFileUploaderMock } from './ContentFileUploaderMock';
 

@@ -1,5 +1,5 @@
 import Chance from 'chance';
-import { ContentsSize } from '../../../../../src/context/virtual-drive/contents/domain/ContentsSize';
+import { ContentsSize } from '../../../../../src/context/drive/contents/domain/ContentsSize';
 const chance = new Chance();
 
 export class ContentsSizeMother {

@@ -1,4 +1,4 @@
-import { LocalFileContentsDirectoryProvider } from '../../../../../src/context/virtual-drive/shared/domain/LocalFileContentsDirectoryProvider';
+import { LocalFileContentsDirectoryProvider } from '../../../../../src/context/drive/shared/domain/LocalFileContentsDirectoryProvider';
 
 export class LocationProviderMock
   implements LocalFileContentsDirectoryProvider

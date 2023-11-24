@@ -1,5 +1,5 @@
 import Chance from 'chance';
-import { ContentsId } from '../../../../../src/context/virtual-drive/contents/domain/ContentsId';
+import { ContentsId } from '../../../../../src/context/drive/contents/domain/ContentsId';
 
 const chance = new Chance();
 

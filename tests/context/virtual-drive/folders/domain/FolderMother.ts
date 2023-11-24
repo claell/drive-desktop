@@ -1,11 +1,9 @@
-import { File } from '../../../../../src/context/virtual-drive/files/domain/File';
-import { FolderStatuses } from '../../../../../src/context/virtual-drive/folders/domain/FolderStatus';
-import {
-  Folder,
-  FolderAttributes,
-} from '../../../../../src/context/virtual-drive/folders/domain/Folder';
-import { FolderUuid } from '../../../../../src/context/virtual-drive/folders/domain/FolderUuid';
 import Chance from 'chance';
+import { Folder } from '../../../../../src/context/drive/folders/domain/Folder';
+import { FolderAttributes } from '../../../../../src/context/drive/folders/domain/Folder';
+import { FolderStatuses } from '../../../../../src/context/drive/folders/domain/FolderStatus';
+import { FolderUuid } from '../../../../../src/context/drive/folders/domain/FolderUuid';
+import { File } from '../../../../../src/context/drive/files/domain/File';
 const chance = new Chance();
 
 export class FolderMother {

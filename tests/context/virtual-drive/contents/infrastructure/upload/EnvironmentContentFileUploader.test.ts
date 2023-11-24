@@ -1,7 +1,7 @@
 import { Readable } from 'stream';
-import { EnvironmentContentFileUploader } from '../../../../../../src/context/virtual-drive/contents/infrastructure/upload/EnvironmentContentFileUploader';
 import { createUploadStrategy } from '../../__mocks__/environment/UploadStrategyFunctionMock';
 import { ContentsIdMother } from '../../domain/ContentsIdMother';
+import { EnvironmentContentFileUploader } from '../../../../../../src/context/drive/contents/infrastructure/upload/EnvironmentContentFileUploader';
 
 describe('Environment Content File Uploader', () => {
   const validFileSize = 1926506743;

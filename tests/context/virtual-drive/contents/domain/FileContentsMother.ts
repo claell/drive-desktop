@@ -1,4 +1,4 @@
-import { VirtualContents } from '../../../../../src/context/virtual-drive/contents/domain/VirtualContents';
+import { VirtualContents } from '../../../../../src/context/drive/contents/domain/VirtualContents';
 import { ContentsIdMother } from './ContentsIdMother';
 import { ContentsSizeMother } from './ContentsSizeMother';
 

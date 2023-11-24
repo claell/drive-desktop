@@ -1,9 +1,9 @@
-import { FolderRenamer } from '../../../../../src/context/virtual-drive/folders/application/FolderRenamer';
-import { SynchronizeOfflineModifications } from '../../../../../src/context/virtual-drive/folders/application/SynchronizeOfflineModifications';
-import { FolderPath } from '../../../../../src/context/virtual-drive/folders/domain/FolderPath';
-import { FolderUuid } from '../../../../../src/context/virtual-drive/folders/domain/FolderUuid';
-import { FolderRenamedDomainEvent } from '../../../../../src/context/virtual-drive/folders/domain/events/FolderRenamedDomainEvent';
-import { InMemoryOfflineFolderRepository } from '../../../../../src/context/virtual-drive/folders/infrastructure/InMemoryOfflineFolderRepository';
+import { FolderRenamer } from '../../../../../src/context/drive/folders/application/FolderRenamer';
+import { SynchronizeOfflineModifications } from '../../../../../src/context/drive/folders/application/SynchronizeOfflineModifications';
+import { FolderPath } from '../../../../../src/context/drive/folders/domain/FolderPath';
+import { FolderUuid } from '../../../../../src/context/drive/folders/domain/FolderUuid';
+import { FolderRenamedDomainEvent } from '../../../../../src/context/drive/folders/domain/events/FolderRenamedDomainEvent';
+import { InMemoryOfflineFolderRepository } from '../../../../../src/context/drive/folders/infrastructure/InMemoryOfflineFolderRepository';
 import { EventRepositoryMock } from '../../shared/__mock__/EventRepositoryMock';
 import { IpcRendererSyncEngineMock } from '../../shared/__mock__/IpcRendererSyncEngineMock';
 import { FolderRemoteFileSystemMock } from '../__mocks__/FolderRemoteFileSystemMock';

@@ -1,4 +1,4 @@
-import { BytesInBinaryToInternacionalSystem } from '../../../../../src/context/virtual-drive/userUsage/application/BytesInBinaryToInternacionalSystem';
+import { BytesInBinaryToInternacionalSystem } from '../../../../../src/context/drive/userUsage/application/BytesInBinaryToInternacionalSystem';
 
 describe('Bytes in binary to internacional system conversion', () => {
   it('when the bytes are 0 returns 0', () => {

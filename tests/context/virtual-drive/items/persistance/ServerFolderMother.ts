@@ -1,8 +1,8 @@
+import { FolderUuid } from '../../../../../src/context/drive/folders/domain/FolderUuid';
 import {
   ServerFolder,
   ServerFolderStatus,
 } from '../../../../../src/context/shared/domain/ServerFolder';
-import { FolderUuid } from '../../../../../src/context/virtual-drive/folders/domain/FolderUuid';
 
 export class ServerFolderMother {
   static any(): ServerFolder {

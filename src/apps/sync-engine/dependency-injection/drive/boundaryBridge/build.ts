@@ -1,7 +1,7 @@
 import { BoundaryBridgeContainer } from './BoundaryBridgeContainer';
 import { ContentsContainer } from '../contents/ContentsContainer';
 import { FilesContainer } from '../files/FilesContainer';
-import { FileCreationOrchestrator } from '../../../../context/virtual-drive/boundaryBridge/application/FileCreationOrchestrator';
+import { FileCreationOrchestrator } from '../../../../../context/drive/boundaryBridge/application/FileCreationOrchestrator';
 
 export function buildBoundaryBridgeContainer(
   contentsContainer: ContentsContainer,
@@ -10,6 +10,7 @@ export function buildBoundaryBridgeContainer(
   const fileCreationOrchestrator = new FileCreationOrchestrator(
     contentsContainer.contentsUploader,
     filesContainer.fileCreator,
+
     filesContainer.sameFileWasMoved
   );
 

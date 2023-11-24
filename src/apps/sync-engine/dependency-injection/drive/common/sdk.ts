@@ -1,7 +1,7 @@
 import { Storage } from '@internxt/sdk/dist/drive/storage';
 import { ipcRenderer } from 'electron';
-import { onUserUnauthorized } from '../../../shared/HttpClient/background-process-clients';
-import packageJson from '../../../../../package.json';
+import packageJson from '../../../../../../package.json';
+import { onUserUnauthorized } from '../../../../shared/HttpClient/background-process-clients';
 
 export class DependencyInjectionStorageSdk {
   private static sdk: Storage;

@@ -28,7 +28,7 @@ export class NotifyMainProcessHydrationFinished {
       extension: event.extension,
       nameWithExtension: event.nameWithExtension,
       size: event.size,
-      processInfo: { elapsedTime: event.elapsedTime },
+      processInfo: { elapsedTime: 0 },
     });
   }
 }

@@ -1,4 +1,3 @@
-import { ContentsId } from '../../../drive/contents/domain/ContentsId';
 import { ValueObject } from '../../../shared/domain/ValueObject';
 
 export type FilePlaceholderIdPrefixType = 'FILE:';

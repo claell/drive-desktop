@@ -1,26 +1,19 @@
 import { Environment } from '@internxt/inxt-js';
 import { DependencyInjectionMnemonicProvider } from '../common/mnemonic';
 import { DependencyInjectionUserProvider } from '../common/user';
-import { SharedContainer } from '../shared/SharedContainer';
 import { ContentsContainer } from './ContentsContainer';
-import { DependencyInjectionEventBus } from '../common/eventBus';
 import { DependencyInjectionEventRepository } from '../common/eventRepository';
-import { ContentsDownloader } from '../../../../context/virtual-drive/contents/application/download/ContentsDownloader';
-import { ContentsUploader } from '../../../../context/virtual-drive/contents/application/ContentsUploader';
-import { NotifyMainProcessHydrationFinished } from '../../../../context/virtual-drive/contents/application/NotifyMainProcessHydrationFinished';
-import { RetryContentsUploader } from '../../../../context/virtual-drive/contents/application/RetryContentsUploader';
-import { EnvironmentRemoteFileContentsManagersFactory } from '../../../../context/virtual-drive/contents/infrastructure/EnvironmentRemoteFileContentsManagersFactory';
-import { FSLocalFileProvider } from '../../../../context/virtual-drive/contents/infrastructure/FSLocalFileProvider';
-import { FSLocalFileSystem } from '../../../../context/local-drive/contents/infrastructure/FSLocalFileSystem';
-import { ipcRendererSyncEngine } from '../../ipcRendererSyncEngine';
-import { IPCLocalFileContentsDirectoryProvider } from '../../../../context/virtual-drive/shared/infrastructure/LocalFileContentsDirectoryProviders/IPCLocalFileContentsDirectoryProvider';
+import { ContentsUploader } from '../../../../../context/drive/contents/application/ContentsUploader';
+import { NotifyMainProcessHydrationFinished } from '../../../../../context/drive/contents/application/NotifyMainProcessHydrationFinished';
+import { RetryContentsUploader } from '../../../../../context/drive/contents/application/RetryContentsUploader';
+import { ContentsDownloader } from '../../../../../context/drive/contents/application/download/ContentsDownloader';
+import { EnvironmentRemoteFileContentsManagersFactory } from '../../../../../context/drive/contents/infrastructure/EnvironmentRemoteFileContentsManagersFactory';
+import { IPCLocalFileContentsDirectoryProvider } from '../../../../../context/drive/shared/infrastructure/LocalFileContentsDirectoryProviders/IPCLocalFileContentsDirectoryProvider';
+import { ipcRendererSyncEngine } from '../../../ipcRendererSyncEngine';
 
-export async function buildContentsContainer(
-  sharedContainer: SharedContainer
-): Promise<ContentsContainer> {
+export async function buildContentsContainer(): Promise<ContentsContainer> {
   const user = DependencyInjectionUserProvider.get();
   const mnemonic = DependencyInjectionMnemonicProvider.get();
-  const { bus: eventBus } = DependencyInjectionEventBus;
   const eventRepository = DependencyInjectionEventRepository.get();
 
   const environment = new Environment({
@@ -33,12 +26,9 @@ export async function buildContentsContainer(
   const contentsManagerFactory =
     new EnvironmentRemoteFileContentsManagersFactory(environment, user.bucket);
 
-  const contentsProvider = new FSLocalFileProvider();
   const contentsUploader = new ContentsUploader(
     contentsManagerFactory,
-    contentsProvider,
-    ipcRendererSyncEngine,
-    sharedContainer.relativePathToAbsoluteConverter
+    ipcRendererSyncEngine
   );
 
   const retryContentsUploader = new RetryContentsUploader(contentsUploader);
@@ -46,17 +36,10 @@ export async function buildContentsContainer(
   const localFileContentsDirectoryProvider =
     new IPCLocalFileContentsDirectoryProvider();
 
-  const localWriter = new FSLocalFileSystem(
-    localFileContentsDirectoryProvider,
-    ''
-  );
-
   const contentsDownloader = new ContentsDownloader(
     contentsManagerFactory,
-    localWriter,
     ipcRendererSyncEngine,
-    localFileContentsDirectoryProvider,
-    eventBus
+    localFileContentsDirectoryProvider
   );
 
   const notifyMainProcessHydrationFinished =

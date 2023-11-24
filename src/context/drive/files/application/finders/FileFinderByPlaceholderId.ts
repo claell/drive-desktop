@@ -1,6 +1,6 @@
+import { FilePlaceholderId } from '../../../../virtual-drive/files/domain/VirtualFileId';
 import { File } from '../../domain/File';
 import { FileRepository } from '../../domain/FileRepository';
-import { FilePlaceholderId } from '../../../../virtual-drive/files/domain/PlaceholderId';
 import { FileNotFoundError } from '../../domain/errors/FileNotFoundError';
 
 export class FileFinderByPlaceholderId {

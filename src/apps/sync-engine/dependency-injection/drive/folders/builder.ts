@@ -1,32 +1,32 @@
-import { NodeWinLocalFileSystem } from '../../../../context/virtual-drive/folders/infrastructure/NodeWinLocalFileSystem';
-import { AllParentFoldersStatusIsExists } from '../../../../context/virtual-drive/folders/application/AllParentFoldersStatusIsExists';
-import { FolderByPartialSearcher } from '../../../../context/virtual-drive/folders/application/FolderByPartialSearcher';
-import { FolderCreator } from '../../../../context/virtual-drive/folders/application/FolderCreator';
-import { FolderDeleter } from '../../../../context/virtual-drive/folders/application/FolderDeleter';
-import { FolderFinder } from '../../../../context/virtual-drive/folders/application/FolderFinder';
-import { FolderMover } from '../../../../context/virtual-drive/folders/application/FolderMover';
-import { FolderPathUpdater } from '../../../../context/virtual-drive/folders/application/FolderPathUpdater';
-import { FolderRenamer } from '../../../../context/virtual-drive/folders/application/FolderRenamer';
-import { FolderRepositoryInitiator } from '../../../../context/virtual-drive/folders/application/FolderRepositoryInitiator';
-import { FoldersPlaceholderCreator } from '../../../../context/virtual-drive/folders/application/FoldersPlaceholderCreator';
-import { OfflineFolderCreator } from '../../../../context/virtual-drive/folders/application/Offline/OfflineFolderCreator';
-import { OfflineFolderMover } from '../../../../context/virtual-drive/folders/application/Offline/OfflineFolderMover';
-import { OfflineFolderPathUpdater } from '../../../../context/virtual-drive/folders/application/Offline/OfflineFolderPathUpdater';
-import { OfflineFolderRenamer } from '../../../../context/virtual-drive/folders/application/Offline/OfflineFolderRenamer';
-import { RetrieveAllFolders } from '../../../../context/virtual-drive/folders/application/RetrieveAllFolders';
-import { SynchronizeOfflineModifications } from '../../../../context/virtual-drive/folders/application/SynchronizeOfflineModifications';
-import { SynchronizeOfflineModificationsOnFolderCreated } from '../../../../context/virtual-drive/folders/application/SynchronizeOfflineModificationsOnFolderCreated';
-import { FolderPlaceholderUpdater } from '../../../../context/virtual-drive/folders/application/UpdatePlaceholderFolder';
-import { HttpRemoteFileSystem } from '../../../../context/virtual-drive/folders/infrastructure/HttpRemoteFileSystem';
-import { InMemoryFolderRepository } from '../../../../context/virtual-drive/folders/infrastructure/InMemoryFolderRepository';
-import { InMemoryOfflineFolderRepository } from '../../../../context/virtual-drive/folders/infrastructure/InMemoryOfflineFolderRepository';
-import { ipcRendererSyncEngine } from '../../ipcRendererSyncEngine';
 import { DependencyInjectionHttpClientsProvider } from '../common/clients';
 import { DependencyInjectionEventBus } from '../common/eventBus';
 import { DependencyInjectionEventRepository } from '../common/eventRepository';
 import { DependencyInjectionVirtualDrive } from '../../virtual-drive/common/virtualDrive';
-import { SharedContainer } from '../shared/SharedContainer';
 import { FoldersContainer } from './FoldersContainer';
+import { AllParentFoldersStatusIsExists } from '../../../../../context/drive/folders/application/AllParentFoldersStatusIsExists';
+import { FolderByPartialSearcher } from '../../../../../context/drive/folders/application/FolderByPartialSearcher';
+import { FolderCreator } from '../../../../../context/drive/folders/application/FolderCreator';
+import { FolderDeleter } from '../../../../../context/drive/folders/application/FolderDeleter';
+import { FolderFinder } from '../../../../../context/drive/folders/application/FolderFinder';
+import { FolderMover } from '../../../../../context/drive/folders/application/FolderMover';
+import { FolderPathUpdater } from '../../../../../context/drive/folders/application/FolderPathUpdater';
+import { FolderRenamer } from '../../../../../context/drive/folders/application/FolderRenamer';
+import { FolderRepositoryInitiator } from '../../../../../context/drive/folders/application/FolderRepositoryInitiator';
+import { FoldersPlaceholderCreator } from '../../../../../context/drive/folders/application/FoldersPlaceholderCreator';
+import { OfflineFolderCreator } from '../../../../../context/drive/folders/application/Offline/OfflineFolderCreator';
+import { OfflineFolderMover } from '../../../../../context/drive/folders/application/Offline/OfflineFolderMover';
+import { OfflineFolderPathUpdater } from '../../../../../context/drive/folders/application/Offline/OfflineFolderPathUpdater';
+import { OfflineFolderRenamer } from '../../../../../context/drive/folders/application/Offline/OfflineFolderRenamer';
+import { RetrieveAllFolders } from '../../../../../context/drive/folders/application/RetrieveAllFolders';
+import { SynchronizeOfflineModifications } from '../../../../../context/drive/folders/application/SynchronizeOfflineModifications';
+import { SynchronizeOfflineModificationsOnFolderCreated } from '../../../../../context/drive/folders/application/SynchronizeOfflineModificationsOnFolderCreated';
+import { FolderPlaceholderUpdater } from '../../../../../context/drive/folders/application/UpdatePlaceholderFolder';
+import { HttpRemoteFileSystem } from '../../../../../context/drive/folders/infrastructure/HttpRemoteFileSystem';
+import { InMemoryFolderRepository } from '../../../../../context/drive/folders/infrastructure/InMemoryFolderRepository';
+import { InMemoryOfflineFolderRepository } from '../../../../../context/drive/folders/infrastructure/InMemoryOfflineFolderRepository';
+import { NodeWinLocalFileSystem } from '../../../../../context/drive/folders/infrastructure/NodeWinLocalFileSystem';
+import { ipcRendererSyncEngine } from '../../../ipcRendererSyncEngine';
+import { SharedContainer } from '../../shared/SharedContainer';
 
 export async function buildFoldersContainer(
   shredContainer: SharedContainer
@@ -39,6 +39,7 @@ export async function buildFoldersContainer(
   const repository = new InMemoryFolderRepository();
 
   const localFileSystem = new NodeWinLocalFileSystem(virtualDrive);
+
   const remoteFileSystem = new HttpRemoteFileSystem(
     clients.drive,
     clients.newDrive

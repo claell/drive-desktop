@@ -5,7 +5,7 @@ export class RepositoryPopulator {
   constructor(private readonly repository: FileRepository) {}
 
   async run(files: Array<File>): Promise<void> {
-    const addPromises = files.map((file: File) => this.repository.add(file));
+    const addPromises = files.map((file: File) => this.repository.upsert(file));
 
     await Promise.all(addPromises);
   }

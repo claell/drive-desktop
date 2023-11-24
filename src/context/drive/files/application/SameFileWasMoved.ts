@@ -3,7 +3,7 @@ import { FilePath } from '../domain/FilePath';
 import { FileRepository } from '../domain/FileRepository';
 import { FileMovedDomainEvent } from '../domain/events/FileMovedDomainEvent';
 import Logger from 'electron-log';
-import { VirtualFileSystem } from '../../../virtual-drive/files/domain/VirtualFileSystem';
+import { LocalFileIdProvider } from '../../shared/application/LocalFileIdProvider';
 
 // TODO: find a better name
 type WasMovedResult = { result: false } | { result: true; contentsId: string };
@@ -11,7 +11,7 @@ type WasMovedResult = { result: false } | { result: true; contentsId: string };
 export class SameFileWasMoved {
   constructor(
     private readonly repository: FileRepository,
-    private readonly localFileSystem: VirtualFileSystem,
+    private readonly localFileIdProvider: LocalFileIdProvider,
     private readonly eventHistory: EventRepository
   ) {}
 
@@ -46,7 +46,7 @@ export class SameFileWasMoved {
       return { result: false };
     }
 
-    const trackerId = await this.localFileSystem.getLocalFileId(file);
+    const trackerId = await this.localFileIdProvider.run(file.path);
 
     if (trackerId !== movedEvent.toPrimitives().trackerId) {
       return { result: false };

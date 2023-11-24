@@ -1,5 +1,4 @@
 import { LocalContentsReader } from '../../../local-drive/contents/application/LocalContentsReadder';
-import { LocalFileSystem } from '../../../local-drive/contents/domain/LocalFileSystem';
 import { RetryContentsUploader } from '../../contents/application/RetryContentsUploader';
 import { FileCreator } from '../../files/application/FileCreator';
 import { SameFileWasMoved } from '../../files/application/SameFileWasMoved';

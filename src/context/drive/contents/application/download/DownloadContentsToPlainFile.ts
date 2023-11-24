@@ -51,11 +51,7 @@ export class DownloadContentsToPlainFile {
     this.registerEvents(downloader, file);
 
     const readable = await downloader.download(file);
-    const localContents = LocalContents.downloadedFrom(
-      file,
-      readable,
-      downloader.elapsedTime()
-    );
+    const localContents = LocalContents.downloadedFrom(file, readable);
 
     const write = await this.localWriter.write(localContents, file.contentsId);
 

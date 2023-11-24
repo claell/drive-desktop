@@ -11,10 +11,8 @@ import { InMemoryFileRepository } from '../../../../../context/drive/files/infra
 import { SDKRemoteFileSystem } from '../../../../../context/drive/files/infrastructure/SDKRemoteFileSystem';
 import { LocalFileIdProvider } from '../../../../../context/drive/shared/application/LocalFileIdProvider';
 import crypt from '../../../../../context/shared/infrastructure/crypt';
-import { NodeWinLocalFileSystem } from '../../../../../context/virtual-drive/files/infrastructure/NodeWinLocalFileSystem';
 import { ipcRendererSyncEngine } from '../../../ipcRendererSyncEngine';
 import { SharedContainer } from '../../shared/SharedContainer';
-import { DependencyInjectionVirtualDrive } from '../../virtual-drive/common/virtualDrive';
 import { DependencyInjectionEventBus } from '../common/eventBus';
 import { DependencyInjectionEventRepository } from '../common/eventRepository';
 import { DependencyInjectionStorageSdk } from '../common/sdk';
@@ -32,16 +30,15 @@ export async function buildFilesContainer(
   const user = DependencyInjectionUserProvider.get();
   const { bus: eventBus } = DependencyInjectionEventBus;
   const eventHistory = DependencyInjectionEventRepository.get();
-  const { virtualDrive } = DependencyInjectionVirtualDrive;
   const sdk = await DependencyInjectionStorageSdk.get();
 
   const remoteFileSystem = new SDKRemoteFileSystem(sdk, crypt, user.bucket);
-  const localFileSystem = new NodeWinLocalFileSystem(
-    virtualDrive,
-    sharedContainer.relativePathToAbsoluteConverter
-  );
 
   const repository = new InMemoryFileRepository();
+
+  const localFileIdProvider = new LocalFileIdProvider(
+    sharedContainer.relativePathToAbsoluteConverter
+  );
 
   const fileFinderByContentsId = new FileFinderByContentsId(repository);
 
@@ -55,13 +52,13 @@ export async function buildFilesContainer(
 
   const sameFileWasMoved = new SameFileWasMoved(
     repository,
-    localFileSystem,
+    localFileIdProvider,
     eventHistory
   );
 
   const filePathUpdater = new FilePathUpdater(
     remoteFileSystem,
-    localFileSystem,
+    localFileIdProvider,
     repository,
     fileFinderByContentsId,
     folderContainer.folderFinder,
@@ -79,10 +76,6 @@ export async function buildFilesContainer(
   );
 
   const repositoryPopulator = new RepositoryPopulator(repository);
-
-  const localFileIdProvider = new LocalFileIdProvider(
-    sharedContainer.relativePathToAbsoluteConverter
-  );
 
   const filesPlaceholderUpdater = new FilesPlaceholderUpdater(
     repository,

@@ -1,5 +1,5 @@
-import { PlatformPathConverter } from '../../../virtual-drive/shared/application/PlatformPathConverter';
-import { RelativePathToAbsoluteConverter } from '../../../virtual-drive/shared/application/RelativePathToAbsoluteConverter';
+import { PlatformPathConverter } from '../../../drive/shared/application/PlatformPathConverter';
+import { RelativePathToAbsoluteConverter } from '../../../drive/shared/application/RelativePathToAbsoluteConverter';
 import { LocalFileSystem } from '../domain/LocalFileSystem';
 import { LocalContents } from '../domain/LocalContents';
 

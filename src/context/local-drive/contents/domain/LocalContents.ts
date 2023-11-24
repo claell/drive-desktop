@@ -1,8 +1,8 @@
 import { Readable } from 'stream';
 import { AggregateRoot } from '../../../shared/domain/AggregateRoot';
-import { ContentsSize } from '../../../virtual-drive/contents/domain/ContentsSize';
-import { ContentsDownloadedDomainEvent } from '../../../virtual-drive/contents/domain/events/ContentsDownloadedDomainEvent';
-import { File } from '../../../virtual-drive/files/domain/File';
+import { ContentsSize } from '../../../drive/contents/domain/ContentsSize';
+import { ContentsDownloadedDomainEvent } from '../../../drive/contents/domain/events/ContentsDownloadedDomainEvent';
+import { File } from '../../../drive/files/domain/File';
 
 export type LocalContentsAttributes = {
   name: string;

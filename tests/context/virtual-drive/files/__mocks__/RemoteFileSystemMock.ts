@@ -2,7 +2,7 @@ import {
   File,
   FileAttributes,
 } from '../../../../../src/context/virtual-drive/files/domain/File';
-import { OfflineFile } from '../../../../../src/context/virtual-drive/files/domain/OfflineFile';
+import { LocalFile } from '../../../../../src/context/local-drive/files/domain/LocalFile';
 import { RemoteFileSystem } from '../../../../../src/context/virtual-drive/files/domain/file-systems/RemoteFileSystem';
 
 export class RemoteFileSystemMock implements RemoteFileSystem {
@@ -11,7 +11,7 @@ export class RemoteFileSystemMock implements RemoteFileSystem {
   public readonly moveMock = jest.fn();
   public readonly renameMock = jest.fn();
 
-  persist(offline: OfflineFile): Promise<FileAttributes> {
+  create(offline: LocalFile): Promise<FileAttributes> {
     return this.persistMock(offline);
   }
 

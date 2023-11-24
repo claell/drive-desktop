@@ -1,32 +1,22 @@
-import { DomainEventSubscribers } from '../../../context/virtual-drive/shared/infrastructure/DomainEventSubscribers';
+import { DomainEventSubscribers } from '../../../context/shared/infrastructure/DomainEventSubscribers';
 import { getUser } from '../../main/auth/service';
-import { DependencyContainer } from './DependencyContainer';
-import { buildBoundaryBridgeContainer } from './boundaryBridge/build';
-import { DependencyInjectionEventBus } from './common/eventBus';
-import { DependencyInjectionVirtualDrive } from './common/virtualDrive';
-import { buildContentsContainer } from './contents/builder';
-import { buildFilesContainer } from './files/builder';
-import { buildFoldersContainer } from './folders/builder';
-import { buildItemsContainer } from './items/builder';
+import { SyncEngineDependencyContainer } from './SyncEngineDependencyContainer';
+import { DriveDependencyContainer } from './drive/DriveDependencyContainer';
+import { buildBoundaryBridgeContainer } from './drive/boundaryBridge/build';
+import { DependencyInjectionEventBus } from './drive/common/eventBus';
+import { buildContentsContainer } from './drive/contents/builder';
+import { buildFilesContainer } from './drive/files/builder';
+import { buildFoldersContainer } from './drive/folders/builder';
+import { buildItemsContainer } from './drive/items/builder';
 import { buildSharedContainer } from './shared/builder';
+import { VirtualDriveDependencyContainer } from './virtual-drive/VirtualDriveDependencyContainer';
+import { DependencyInjectionVirtualDrive } from './virtual-drive/common/virtualDrive';
+import { buildVirtualFileContainer } from './virtual-drive/files/builder';
 
 export class DependencyContainerFactory {
-  private static _container: DependencyContainer | undefined;
+  private static _container: SyncEngineDependencyContainer | undefined;
 
-  static readonly subscribers: Array<keyof DependencyContainer> = [
-    'createFilePlaceholderOnDeletionFailed',
-    'synchronizeOfflineModificationsOnFolderCreated',
-  ];
-
-  eventSubscribers(
-    key: keyof DependencyContainer
-  ): DependencyContainer[keyof DependencyContainer] | undefined {
-    if (!DependencyContainerFactory._container) return undefined;
-
-    return DependencyContainerFactory._container[key];
-  }
-
-  async build(): Promise<DependencyContainer> {
+  async build(): Promise<SyncEngineDependencyContainer> {
     if (DependencyContainerFactory._container !== undefined) {
       return DependencyContainerFactory._container;
     }
@@ -37,7 +27,6 @@ export class DependencyContainerFactory {
     }
 
     const { bus } = DependencyInjectionEventBus;
-    const { virtualDrive } = DependencyInjectionVirtualDrive;
 
     const sharedContainer = buildSharedContainer();
     const itemsContainer = buildItemsContainer();
@@ -52,18 +41,49 @@ export class DependencyContainerFactory {
       filesContainer
     );
 
-    const container = {
-      ...itemsContainer,
-      ...contentsContainer,
-      ...filesContainer,
-      ...foldersContainer,
-      ...sharedContainer,
-      ...boundaryBridgeContainer,
+    const driveContainer: DriveDependencyContainer = {
+      dependencies: {
+        ...itemsContainer,
+        ...contentsContainer,
+        ...filesContainer,
+        ...foldersContainer,
+        ...boundaryBridgeContainer,
+        ...sharedContainer,
+      },
 
-      virtualDrive,
+      subscribers: () => ['synchronizeOfflineModificationsOnFolderCreated'],
     };
 
-    bus.addSubscribers(DomainEventSubscribers.from(container));
+    const virtualFilesContainer = await buildVirtualFileContainer(
+      sharedContainer,
+      filesContainer
+    );
+
+    const virtualDriveContainer: VirtualDriveDependencyContainer = {
+      dependencies: {
+        ...virtualFilesContainer,
+      },
+
+      subscribers: () => [
+        'createFilePlaceholderOnDeletionFailed',
+        'createFilePlaceholderOnFileAdded',
+        'deleteFilePlaceholderOnFileTrashed',
+        'updateFilePlaceholderOnFileUpdated',
+      ],
+    };
+
+    const { virtualDrive } = DependencyInjectionVirtualDrive;
+
+    const container: SyncEngineDependencyContainer = {
+      drive: driveContainer,
+      placeholders: virtualDriveContainer,
+
+      virtualDrive: virtualDrive,
+    };
+
+    bus.addSubscribers(DomainEventSubscribers.from(driveContainer));
+    bus.addSubscribers(DomainEventSubscribers.from(virtualDriveContainer));
+
     DependencyContainerFactory._container = container;
 
     return container;

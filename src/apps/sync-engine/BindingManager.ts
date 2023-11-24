@@ -1,14 +1,14 @@
 import Logger from 'electron-log';
 import * as fs from 'fs';
 import { VirtualDrive } from 'virtual-drive/dist';
-import { FilePlaceholderId } from '../../context/virtual-drive/files/domain/PlaceholderId';
-import { ItemsSearcher } from '../../context/virtual-drive/items/application/ItemsSearcher';
-import { PlatformPathConverter } from '../../context/virtual-drive/shared/application/PlatformPathConverter';
 import { buildControllers } from './callbacks-controllers/buildControllers';
 import { executeControllerWithFallback } from './callbacks-controllers/middlewares/executeControllerWithFallback';
-import { DependencyContainer } from './dependency-injection/DependencyContainer';
 import { ipcRendererSyncEngine } from './ipcRendererSyncEngine';
 import { ProcessIssue } from '../shared/types';
+import { ItemsSearcher } from '../../context/drive/items/application/ItemsSearcher';
+import { PlatformPathConverter } from '../../context/drive/shared/application/PlatformPathConverter';
+import { FilePlaceholderId } from '../../context/virtual-drive/files/domain/VirtualFileId';
+import { SyncEngineDependencyContainer } from './dependency-injection/SyncEngineDependencyContainer';
 
 export type CallbackDownload = (
   success: boolean,
@@ -18,7 +18,7 @@ export class BindingsManager {
   private static readonly PROVIDER_NAME = 'Internxt';
   private progressBuffer = 0;
   constructor(
-    private readonly container: DependencyContainer,
+    private readonly container: SyncEngineDependencyContainer,
     private readonly paths: {
       root: string;
       icon: string;
@@ -26,13 +26,20 @@ export class BindingsManager {
   ) {}
 
   async load(): Promise<void> {
-    const tree = await this.container.existingItemsTreeBuilder.run();
+    const tree =
+      await this.container.drive.dependencies.existingItemsTreeBuilder.run();
 
-    await this.container.repositoryPopulator.run(tree.files);
-    await this.container.filesPlaceholderCreator.run(tree.files);
+    await this.container.drive.dependencies.repositoryPopulator.run(tree.files);
+    await this.container.drive.dependencies.filesPlaceholderCreator.run(
+      tree.files
+    );
 
-    await this.container.folderRepositoryInitiator.run(tree.folders);
-    await this.container.foldersPlaceholderCreator.run(tree.folders);
+    await this.container.drive.dependencies.folderRepositoryInitiator.run(
+      tree.folders
+    );
+    await this.container.drive.dependencies.foldersPlaceholderCreator.run(
+      tree.folders
+    );
   }
 
   async start(version: string, providerId: string) {
@@ -89,9 +96,10 @@ export class BindingsManager {
             callback
           );
           Logger.debug('Execute Fetch Data Callback, sending path:', path);
-          const file = await this.container.fileFinderByPlaceholderId.run(
-            contentsId
-          );
+          const file =
+            await this.container.drive.dependencies.fileFinderByPlaceholderId.run(
+              contentsId
+            );
           let finished = false;
           while (!finished) {
             const result = await callback(true, path);
@@ -189,7 +197,7 @@ export class BindingsManager {
       },
     };
 
-    await this.container.virtualDrive.registerSyncRoot(
+    await this.container.placeholders.registerSyncRoot(
       BindingsManager.PROVIDER_NAME,
       version,
       providerId,
@@ -197,7 +205,7 @@ export class BindingsManager {
       this.paths.icon
     );
 
-    await this.container.virtualDrive.connectSyncRoot();
+    await this.container.placeholders.connectSyncRoot();
 
     await this.load();
   }
@@ -216,8 +224,10 @@ export class BindingsManager {
     const itemsSearcher = new ItemsSearcher();
     const remainingItems = itemsSearcher.listFilesAndFolders(this.paths.root);
 
-    const files = await this.container.retrieveAllFiles.run();
-    const folders = await this.container.retrieveAllFolders.run();
+    const files =
+      await this.container.drive.dependencies.retrieveAllFiles.run();
+    const folders =
+      await this.container.drive.dependencies.retrieveAllFolders.run();
 
     const items = [...files, ...folders];
 
@@ -228,7 +238,7 @@ export class BindingsManager {
       const win32RelativePaths =
         PlatformPathConverter.posixToWin(posixRelativePath);
 
-      return this.container.relativePathToAbsoluteConverter.run(
+      return this.container.drive.dependencies.relativePathToAbsoluteConverter.run(
         win32RelativePaths
       );
     });
@@ -269,10 +279,15 @@ export class BindingsManager {
     Logger.info('[SYNC ENGINE]: Updating placeholders');
 
     try {
-      const tree = await this.container.existingItemsTreeBuilder.run();
+      const tree =
+        await this.container.drive.dependencies.existingItemsTreeBuilder.run();
 
-      await this.container.filesPlaceholderUpdater.run(tree.files);
-      await this.container.folderPlaceholderUpdater.run(tree.folders);
+      await this.container.drive.dependencies.filesPlaceholderUpdater.run(
+        tree.files
+      );
+      await this.container.drive.dependencies.folderPlaceholderUpdater.run(
+        tree.folders
+      );
     } catch (error) {
       Logger.error('[SYNC ENGINE] ', error);
     }

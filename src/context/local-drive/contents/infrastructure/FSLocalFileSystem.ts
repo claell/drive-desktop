@@ -1,7 +1,7 @@
 import { ensureFolderExists } from '../../../../apps/shared/fs/ensure-folder-exists';
 import { WriteReadableToFile } from '../../../../apps/shared/fs/write-readable-to-file';
 import { LocalContents } from '../domain/LocalContents';
-import { LocalFileContentsDirectoryProvider } from '../../../virtual-drive/shared/domain/LocalFileContentsDirectoryProvider';
+import { LocalFileContentsDirectoryProvider } from '../../../drive/shared/domain/LocalFileContentsDirectoryProvider';
 import { LocalFileSystem } from '../domain/LocalFileSystem';
 import path from 'path';
 import { createReadStream, promises as fs, watch } from 'fs';

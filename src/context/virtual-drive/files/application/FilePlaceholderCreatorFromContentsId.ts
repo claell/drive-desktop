@@ -1,16 +1,16 @@
-import { File } from '../domain/File';
-import { LocalFileSystem } from '../domain/file-systems/LocalFileSystem';
-import { FileFinderByContentsId } from './finders/FileFinderByContentsId';
+import { VirtualFileSystem } from '../domain/VirtualFileSystem';
+import { VirtualFile } from '../domain/VirtualFile';
+import { VirtualFileFinder } from './VirtualFileFinder';
 
 export class FilePlaceholderCreatorFromContentsId {
   constructor(
-    private readonly finder: FileFinderByContentsId,
-    private readonly local: LocalFileSystem
+    private readonly finder: VirtualFileFinder,
+    private readonly virtualFileSystem: VirtualFileSystem
   ) {}
 
-  run(contentsId: File['contentsId']) {
-    const file = this.finder.run(contentsId);
+  async run(contentsId: VirtualFile['contentsId']) {
+    const file = await this.finder.run(contentsId);
 
-    this.local.createPlaceHolder(file);
+    this.virtualFileSystem.createPlaceHolder(file);
   }
 }

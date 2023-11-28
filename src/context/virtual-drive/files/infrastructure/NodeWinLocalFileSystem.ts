@@ -3,6 +3,7 @@ import { VirtualFileSystem } from '../domain/VirtualFileSystem';
 import { RelativePathToAbsoluteConverter } from '../../../drive/shared/application/RelativePathToAbsoluteConverter';
 import fs from 'fs/promises';
 import { VirtualFile } from '../domain/VirtualFile';
+import Logger from 'electron-log';
 
 export class NodeWinLocalFileSystem implements VirtualFileSystem {
   constructor(
@@ -21,6 +22,8 @@ export class NodeWinLocalFileSystem implements VirtualFileSystem {
   }
 
   async createPlaceHolder(file: VirtualFile): Promise<void> {
+    Logger.debug('Creating placeholder for ', file.attributes());
+
     this.virtualDrive.createFileByPath(
       file.path,
       file.id,

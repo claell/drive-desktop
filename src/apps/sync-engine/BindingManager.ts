@@ -25,23 +25,6 @@ export class BindingsManager {
     }
   ) {}
 
-  async load(): Promise<void> {
-    const tree =
-      await this.container.drive.dependencies.existingItemsTreeBuilder.run();
-
-    await this.container.drive.dependencies.repositoryPopulator.run(tree.files);
-    await this.container.drive.dependencies.filesPlaceholderCreator.run(
-      tree.files
-    );
-
-    await this.container.drive.dependencies.folderRepositoryInitiator.run(
-      tree.folders
-    );
-    await this.container.drive.dependencies.foldersPlaceholderCreator.run(
-      tree.folders
-    );
-  }
-
   async start(version: string, providerId: string) {
     await this.stop();
 
@@ -197,7 +180,7 @@ export class BindingsManager {
       },
     };
 
-    await this.container.placeholders.registerSyncRoot(
+    await this.container.virtualDrive.registerSyncRoot(
       BindingsManager.PROVIDER_NAME,
       version,
       providerId,
@@ -205,9 +188,7 @@ export class BindingsManager {
       this.paths.icon
     );
 
-    await this.container.placeholders.connectSyncRoot();
-
-    await this.load();
+    await this.container.virtualDrive.connectSyncRoot();
   }
 
   watch() {
@@ -279,15 +260,14 @@ export class BindingsManager {
     Logger.info('[SYNC ENGINE]: Updating placeholders');
 
     try {
-      const tree =
-        await this.container.drive.dependencies.existingItemsTreeBuilder.run();
-
-      await this.container.drive.dependencies.filesPlaceholderUpdater.run(
-        tree.files
-      );
-      await this.container.drive.dependencies.folderPlaceholderUpdater.run(
-        tree.folders
-      );
+      // const tree =
+      //   await this.container.drive.dependencies.existingItemsTreeBuilder.run();
+      // await this.container.drive.dependencies.filesPlaceholderUpdater.run(
+      //   tree.files.
+      // );
+      // await this.container.drive.dependencies.folderPlaceholderUpdater.run(
+      //   tree.folders
+      // );
     } catch (error) {
       Logger.error('[SYNC ENGINE] ', error);
     }

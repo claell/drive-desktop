@@ -1,20 +1,15 @@
-import { FilesByFolderPathSearcher } from '../../../../context/virtual-drive/files/application/FilesByFolderPathSearcher';
-import { FilesSearcher } from '../../../../context/virtual-drive/files/application/FilesSearcher';
-import { RepositoryPopulator } from '../../../../context/virtual-drive/files/application/RepositoryPopulator';
-import { File } from '../../../../context/virtual-drive/files/domain/File';
-import { InMemoryFileRepository } from '../../../../context/virtual-drive/files/infrastructure/InMemoryFileRepository';
+import { FilesByFolderPathSearcher } from '../../../../context/drive/files/application/FilesByFolderPathSearcher';
+import { FilesSearcher } from '../../../../context/drive/files/application/FilesSearcher';
+import { InMemoryFileRepository } from '../../../../context/drive/files/infrastructure/InMemoryFileRepository';
 import { FoldersContainer } from '../folders/FoldersContainer';
 import { FilesContainer } from './FilesContainer';
+import { File } from '../../../../context/drive/files/domain/File';
 
 export async function buildFilesContainer(
   initialFiles: Array<File>,
   folderContainer: FoldersContainer
 ): Promise<FilesContainer> {
-  const repository = new InMemoryFileRepository();
-
-  const repositoryPopulator = new RepositoryPopulator(repository);
-
-  await repositoryPopulator.run(initialFiles);
+  const repository = InMemoryFileRepository.fromArray(initialFiles);
 
   const filesByFolderPathNameLister = new FilesByFolderPathSearcher(
     repository,

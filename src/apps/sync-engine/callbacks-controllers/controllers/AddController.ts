@@ -1,15 +1,15 @@
 import Logger from 'electron-log';
-import { FileCreationOrchestrator } from '../../../../context/virtual-drive/boundaryBridge/application/FileCreationOrchestrator';
-import { createFilePlaceholderId } from '../../../../context/virtual-drive/files/domain/PlaceholderId';
-import { FolderCreator } from '../../../../context/virtual-drive/folders/application/FolderCreator';
-import { OfflineFolderCreator } from '../../../../context/virtual-drive/folders/application/Offline/OfflineFolderCreator';
-import { createFolderPlaceholderId } from '../../../../context/virtual-drive/folders/domain/FolderPlaceholderId';
-import { OfflineFolder } from '../../../../context/virtual-drive/folders/domain/OfflineFolder';
-import { AbsolutePathToRelativeConverter } from '../../../../context/virtual-drive/shared/application/AbsolutePathToRelativeConverter';
-import { PlatformPathConverter } from '../../../../context/virtual-drive/shared/application/PlatformPathConverter';
-import { MapObserver } from '../../../../context/virtual-drive/shared/domain/MapObserver';
 import { PathTypeChecker } from '../../../shared/fs/PathTypeChecker ';
 import { CallbackController } from './CallbackController';
+import { OfflineFolder } from '../../../../context/drive/folders/domain/OfflineFolder';
+import { FileCreationOrchestrator } from '../../../../context/drive/boundaryBridge/application/FileCreationOrchestrator';
+import { FolderCreator } from '../../../../context/drive/folders/application/FolderCreator';
+import { OfflineFolderCreator } from '../../../../context/drive/folders/application/Offline/OfflineFolderCreator';
+import { createFolderPlaceholderId } from '../../../../context/drive/folders/domain/FolderPlaceholderId';
+import { AbsolutePathToRelativeConverter } from '../../../../context/drive/shared/application/AbsolutePathToRelativeConverter';
+import { PlatformPathConverter } from '../../../../context/drive/shared/application/PlatformPathConverter';
+import { MapObserver } from '../../../../context/drive/shared/domain/MapObserver';
+import { createFilePlaceholderId } from '../../../../context/virtual-drive/files/domain/VirtualFileId';
 
 type FileCreationQueue = Map<
   string,

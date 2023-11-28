@@ -2,14 +2,20 @@ import { File, FileAttributes } from '../domain/File';
 import { FileRepository } from '../domain/FileRepository';
 
 export class InMemoryFileRepository implements FileRepository {
-  private files: Map<string, FileAttributes>;
+  constructor(private readonly files: Map<string, FileAttributes>) {}
+
+  static fromArray(files: Array<File>): InMemoryFileRepository {
+    const map = new Map<string, FileAttributes>();
+
+    files.forEach((file) => {
+      map.set(file.contentsId, file.attributes());
+    });
+
+    return new InMemoryFileRepository(map);
+  }
 
   private get values(): Array<FileAttributes> {
     return Array.from(this.files.values());
-  }
-
-  constructor() {
-    this.files = new Map();
   }
 
   public all(): Promise<Array<File>> {

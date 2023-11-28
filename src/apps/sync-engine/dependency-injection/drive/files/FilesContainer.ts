@@ -15,7 +15,6 @@ export interface FilesContainer {
   fileCreator: FileCreator;
   sameFileWasMoved: SameFileWasMoved;
   retrieveAllFiles: RetrieveAllFiles;
-  repositoryPopulator: RepositoryPopulator;
   filesPlaceholderUpdater: FilesPlaceholderUpdater;
   fileFinderByPlaceholderId: FileFinderByPlaceholderId;
 }

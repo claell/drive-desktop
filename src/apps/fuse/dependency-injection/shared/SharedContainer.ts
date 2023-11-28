@@ -1,4 +1,4 @@
-import { RelativePathToAbsoluteConverter } from '../../../../context/virtual-drive/shared/application/RelativePathToAbsoluteConverter';
+import { RelativePathToAbsoluteConverter } from '../../../../context/drive/shared/application/RelativePathToAbsoluteConverter';
 
 export interface SharedContainer {
   relativePathToAbsoluteConverter: RelativePathToAbsoluteConverter;

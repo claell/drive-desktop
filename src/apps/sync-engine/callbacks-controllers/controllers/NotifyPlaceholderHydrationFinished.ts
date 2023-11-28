@@ -1,5 +1,5 @@
-import { NotifyMainProcessHydrationFinished } from '../../../../context/virtual-drive/contents/application/NotifyMainProcessHydrationFinished';
-import { FilePlaceholderId } from '../../../../context/virtual-drive/files/domain/PlaceholderId';
+import { NotifyMainProcessHydrationFinished } from '../../../../context/drive/contents/application/NotifyMainProcessHydrationFinished';
+import { FilePlaceholderId } from '../../../../context/virtual-drive/files/domain/VirtualFileId';
 import { CallbackController } from './CallbackController';
 
 export class NotifyPlaceholderHydrationFinished extends CallbackController {

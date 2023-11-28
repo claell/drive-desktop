@@ -1,3 +1,4 @@
+import { File } from '../../../context/drive/files/domain/File';
 import { DependencyContainer } from './DependencyContainer';
 import { buildContentsContainer } from './contents/builder';
 import { buildFilesContainer } from './files/builder';
@@ -29,7 +30,7 @@ export class DependencyContainerFactory {
     const contentsContainer = await buildContentsContainer();
     const foldersContainer = await buildFoldersContainer(tree.folders);
     const filesContainer = await buildFilesContainer(
-      tree.files,
+      tree.files.map((attributes) => File.from(attributes)),
       foldersContainer
     );
 

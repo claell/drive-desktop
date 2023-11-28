@@ -1,9 +1,9 @@
-import { FolderFinder } from '../../../../context/virtual-drive/folders/application/FolderFinder';
-import { FolderRepositoryInitiator } from '../../../../context/virtual-drive/folders/application/FolderRepositoryInitiator';
-import { FolderSearcher } from '../../../../context/virtual-drive/folders/application/FolderSearcher';
-import { FoldersByParentPathSearcher } from '../../../../context/virtual-drive/folders/application/FoldersByParentPathNameLister';
-import { Folder } from '../../../../context/virtual-drive/folders/domain/Folder';
-import { InMemoryFolderRepository } from '../../../../context/virtual-drive/folders/infrastructure/InMemoryFolderRepository';
+import { Folder } from '../../../../context/drive/folders/domain/Folder';
+import { FolderFinder } from '../../../../context/drive/folders/application/FolderFinder';
+import { FolderRepositoryInitiator } from '../../../../context/drive/folders/application/FolderRepositoryInitiator';
+import { FolderSearcher } from '../../../../context/drive/folders/application/FolderSearcher';
+import { FoldersByParentPathSearcher } from '../../../../context/drive/folders/application/FoldersByParentPathNameLister';
+import { InMemoryFolderRepository } from '../../../../context/drive/folders/infrastructure/InMemoryFolderRepository';
 import { FoldersContainer } from './FoldersContainer';
 
 export async function buildFoldersContainer(

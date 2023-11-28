@@ -1,4 +1,4 @@
-import { LocalContentsReader } from '../../../local-drive/contents/application/LocalContentsReadder';
+import { LocalContentsReader } from '../../../local-drive/contents/application/LocalContentsReader';
 import { RetryContentsUploader } from '../../contents/application/RetryContentsUploader';
 import { FileCreator } from '../../files/application/FileCreator';
 import { SameFileWasMoved } from '../../files/application/SameFileWasMoved';

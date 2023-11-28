@@ -2,6 +2,7 @@ import { FileAddedDomainEvent } from '../../../../drive/files/domain/events/File
 import { DomainEventClass } from '../../../../shared/domain/DomainEvent';
 import { DomainEventSubscriber } from '../../../../shared/domain/DomainEventSubscriber';
 import { FilePlaceholderCreatorFromContentsId } from '../FilePlaceholderCreatorFromContentsId';
+import Logger from 'electron-log';
 
 export class CreateFilePlaceholderOnFileAdded
   implements DomainEventSubscriber<FileAddedDomainEvent>
@@ -13,6 +14,8 @@ export class CreateFilePlaceholderOnFileAdded
   }
 
   async on(domainEvent: FileAddedDomainEvent): Promise<void> {
+    Logger.log('Create File Placeholder On File Added');
+
     this.creator.run(domainEvent.aggregateId);
   }
 }

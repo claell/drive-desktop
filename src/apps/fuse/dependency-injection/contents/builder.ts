@@ -1,13 +1,13 @@
 import { Environment } from '@internxt/inxt-js';
-import { DownloadContentsToPlainFile } from '../../../../context/virtual-drive/contents/application/download/DownloadContentsToPlainFile';
-import { ContentsContainer } from './ContentsContainer';
-import { DependencyInjectionUserProvider } from '../common/user';
-import { DependencyInjectionMnemonicProvider } from '../common/mnemonic';
-import { EnvironmentRemoteFileContentsManagersFactory } from '../../../../context/virtual-drive/contents/infrastructure/EnvironmentRemoteFileContentsManagersFactory';
+import { DownloadContentsToPlainFile } from '../../../../context/drive/contents/application/download/DownloadContentsToPlainFile';
+import { EnvironmentRemoteFileContentsManagersFactory } from '../../../../context/drive/contents/infrastructure/EnvironmentRemoteFileContentsManagersFactory';
+import { FuseAppDataLocalFileContentsDirectoryProvider } from '../../../../context/drive/shared/infrastructure/LocalFileContentsDirectoryProviders/FuseAppDataLocalFileContentsDirectoryProvider';
+import { LocalContentChecker } from '../../../../context/local-drive/contents/application/LocalContentChecker';
 import { FSLocalFileSystem } from '../../../../context/local-drive/contents/infrastructure/FSLocalFileSystem';
 import { DependencyInjectionEventBus } from '../common/eventBus';
-import { FuseAppDataLocalFileContentsDirectoryProvider } from '../../../../context/virtual-drive/shared/infrastructure/LocalFileContentsDirectoryProviders/FuseAppDataLocalFileContentsDirectoryProvider';
-import { LocalContentChecker } from '../../../../context/local-drive/contents/application/LocalContentChecker';
+import { DependencyInjectionMnemonicProvider } from '../common/mnemonic';
+import { DependencyInjectionUserProvider } from '../common/user';
+import { ContentsContainer } from './ContentsContainer';
 
 export async function buildContentsContainer(): Promise<ContentsContainer> {
   const user = DependencyInjectionUserProvider.get();

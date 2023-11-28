@@ -1,7 +1,7 @@
 import path from 'path';
-import { RelativePathToAbsoluteConverter } from '../../../../context/virtual-drive/shared/application/RelativePathToAbsoluteConverter';
-import { FuseAppDataLocalFileContentsDirectoryProvider } from '../../../../context/virtual-drive/shared/infrastructure/LocalFileContentsDirectoryProviders/FuseAppDataLocalFileContentsDirectoryProvider';
 import { SharedContainer } from './SharedContainer';
+import { RelativePathToAbsoluteConverter } from '../../../../context/drive/shared/application/RelativePathToAbsoluteConverter';
+import { FuseAppDataLocalFileContentsDirectoryProvider } from '../../../../context/drive/shared/infrastructure/LocalFileContentsDirectoryProviders/FuseAppDataLocalFileContentsDirectoryProvider';
 
 export async function buildSharedContainer(): Promise<SharedContainer> {
   const localFileContentsDirectoryProvider =

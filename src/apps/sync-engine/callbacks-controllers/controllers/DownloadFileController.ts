@@ -1,11 +1,12 @@
 import Logger from 'electron-log';
-import { ContentsDownloader } from '../../../../context/virtual-drive/contents/application/download/ContentsDownloader';
-import { FileFinderByContentsId } from '../../../../context/virtual-drive/files/application/finders/FileFinderByContentsId';
-import { FilePlaceholderId } from '../../../../context/virtual-drive/files/domain/PlaceholderId';
+
 import { CallbackDownload } from '../../BindingManager';
 import { CallbackController } from './CallbackController';
 import { LocalContentsWriter } from '../../../../context/local-drive/contents/application/LocalContentsWriter';
 import { LocalContents } from '../../../../context/local-drive/contents/domain/LocalContents';
+import { ContentsDownloader } from '../../../../context/drive/contents/application/download/ContentsDownloader';
+import { FileFinderByContentsId } from '../../../../context/drive/files/application/finders/FileFinderByContentsId';
+import { FilePlaceholderId } from '../../../../context/virtual-drive/files/domain/VirtualFileId';
 
 export class DownloadFileController extends CallbackController {
   constructor(

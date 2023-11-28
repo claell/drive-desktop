@@ -1,3 +1,4 @@
+import { File } from '../../../context/drive/files/domain/File';
 import { DomainEventSubscribers } from '../../../context/shared/infrastructure/DomainEventSubscribers';
 import { getUser } from '../../main/auth/service';
 import { SyncEngineDependencyContainer } from './SyncEngineDependencyContainer';
@@ -8,6 +9,8 @@ import { buildContentsContainer } from './drive/contents/builder';
 import { buildFilesContainer } from './drive/files/builder';
 import { buildFoldersContainer } from './drive/folders/builder';
 import { buildItemsContainer } from './drive/items/builder';
+import { LocalDriveDependencyContainer } from './local-drive/LocalDriveDependencyContainer';
+import { buildLocalDriveContentsContainer } from './local-drive/contents/build';
 import { buildSharedContainer } from './shared/builder';
 import { VirtualDriveDependencyContainer } from './virtual-drive/VirtualDriveDependencyContainer';
 import { DependencyInjectionVirtualDrive } from './virtual-drive/common/virtualDrive';
@@ -29,14 +32,34 @@ export class DependencyContainerFactory {
     const { bus } = DependencyInjectionEventBus;
 
     const sharedContainer = buildSharedContainer();
+
+    // Local drive container
+    const localContents = await buildLocalDriveContentsContainer(
+      sharedContainer
+    );
+
+    const localDriveContainer: LocalDriveDependencyContainer = {
+      dependencies: {
+        ...localContents,
+      },
+
+      subscribers: () => [],
+    };
+
+    // Drive container
     const itemsContainer = buildItemsContainer();
-    const contentsContainer = await buildContentsContainer(sharedContainer);
+
+    const tree = await itemsContainer.allStatusesTreeBuilder.run();
+
+    const contentsContainer = await buildContentsContainer();
     const foldersContainer = await buildFoldersContainer(sharedContainer);
     const { container: filesContainer } = await buildFilesContainer(
+      tree.files.map((attributes) => File.from(attributes)),
       foldersContainer,
       sharedContainer
     );
     const boundaryBridgeContainer = buildBoundaryBridgeContainer(
+      localContents,
       contentsContainer,
       filesContainer
     );
@@ -54,6 +77,7 @@ export class DependencyContainerFactory {
       subscribers: () => ['synchronizeOfflineModificationsOnFolderCreated'],
     };
 
+    // Virtual drive
     const virtualFilesContainer = await buildVirtualFileContainer(
       sharedContainer,
       filesContainer
@@ -77,6 +101,9 @@ export class DependencyContainerFactory {
     const container: SyncEngineDependencyContainer = {
       drive: driveContainer,
       placeholders: virtualDriveContainer,
+      localDrive: localDriveContainer,
+
+      shared: sharedContainer,
 
       virtualDrive: virtualDrive,
     };

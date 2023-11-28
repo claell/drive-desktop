@@ -2,11 +2,11 @@ import { FileCreator } from '../../../../../context/drive/files/application/File
 import { FileDeleter } from '../../../../../context/drive/files/application/FileDeleter';
 import { FilePathUpdater } from '../../../../../context/drive/files/application/FilePathUpdater';
 import { FilesPlaceholderUpdater } from '../../../../../context/drive/files/application/FilesPlaceholderUpdater';
-import { RepositoryPopulator } from '../../../../../context/drive/files/application/RepositoryPopulator';
 import { RetrieveAllFiles } from '../../../../../context/drive/files/application/RetrieveAllFiles';
 import { SameFileWasMoved } from '../../../../../context/drive/files/application/SameFileWasMoved';
 import { FileFinderByContentsId } from '../../../../../context/drive/files/application/finders/FileFinderByContentsId';
 import { FileFinderByPlaceholderId } from '../../../../../context/drive/files/application/finders/FileFinderByPlaceholderId';
+import { File } from '../../../../../context/drive/files/domain/File';
 import { InMemoryFileRepository } from '../../../../../context/drive/files/infrastructure/InMemoryFileRepository';
 import { SDKRemoteFileSystem } from '../../../../../context/drive/files/infrastructure/SDKRemoteFileSystem';
 import { LocalFileIdProvider } from '../../../../../context/drive/shared/application/LocalFileIdProvider';
@@ -21,6 +21,7 @@ import { FoldersContainer } from '../folders/FoldersContainer';
 import { FilesContainer } from './FilesContainer';
 
 export async function buildFilesContainer(
+  initFiles: Array<File>,
   folderContainer: FoldersContainer,
   sharedContainer: SharedContainer
 ): Promise<{
@@ -34,7 +35,7 @@ export async function buildFilesContainer(
 
   const remoteFileSystem = new SDKRemoteFileSystem(sdk, crypt, user.bucket);
 
-  const repository = new InMemoryFileRepository();
+  const repository = InMemoryFileRepository.fromArray(initFiles);
 
   const localFileIdProvider = new LocalFileIdProvider(
     sharedContainer.relativePathToAbsoluteConverter
@@ -75,8 +76,6 @@ export async function buildFilesContainer(
     ipcRendererSyncEngine
   );
 
-  const repositoryPopulator = new RepositoryPopulator(repository);
-
   const filesPlaceholderUpdater = new FilesPlaceholderUpdater(
     repository,
     localFileIdProvider,
@@ -92,7 +91,6 @@ export async function buildFilesContainer(
     fileCreator,
     sameFileWasMoved,
     retrieveAllFiles: new RetrieveAllFiles(repository),
-    repositoryPopulator: repositoryPopulator,
     filesPlaceholderUpdater,
     fileFinderByPlaceholderId,
   };

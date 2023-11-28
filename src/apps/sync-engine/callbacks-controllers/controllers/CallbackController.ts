@@ -1,11 +1,11 @@
 import {
-  FilePlaceholderId,
-  isFilePlaceholderId,
-} from '../../../../context/virtual-drive/files/domain/PlaceholderId';
-import {
   FolderPlaceholderId,
   isFolderPlaceholderId,
-} from '../../../../context/virtual-drive/folders/domain/FolderPlaceholderId';
+} from '../../../../context/drive/folders/domain/FolderPlaceholderId';
+import {
+  FilePlaceholderId,
+  isFilePlaceholderId,
+} from '../../../../context/virtual-drive/files/domain/VirtualFileId';
 
 export abstract class CallbackController {
   protected trim(id: string): string {

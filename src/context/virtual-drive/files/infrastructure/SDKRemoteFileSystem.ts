@@ -6,10 +6,14 @@ import { FileStatuses } from '../domain/FileStatus';
 import { RemoteFileSystem } from '../domain/file-systems/RemoteFileSystem';
 import { OfflineFile } from '../domain/OfflineFile';
 import * as uuid from 'uuid';
+import { Axios } from 'axios';
+import { FileCreatedResponseDTO } from '../../../../apps/shared/HttpClient/responses/file-created';
+import { AddFileDTO } from './dtos/AddFileDTO';
 
 export class SDKRemoteFileSystem implements RemoteFileSystem {
   constructor(
     private readonly sdk: Storage,
+    private readonly oldDriveClient: Axios,
     private readonly crypt: Crypt,
     private readonly bucket: string
   ) {}
@@ -24,24 +28,40 @@ export class SDKRemoteFileSystem implements RemoteFileSystem {
       throw new Error('Failed to encrypt name');
     }
 
-    const data = await this.sdk.createFileEntry({
-      id: offline.contentsId,
-      type: offline.type,
-      size: offline.size,
-      name: encryptedName,
-      plain_name: offline.name,
-      bucket: this.bucket,
-      folder_id: offline.folderId,
-      encrypt_version: EncryptionVersion.Aes03,
-    });
+    const body: AddFileDTO = {
+      file: {
+        file_id: offline.contentsId,
+        fileId: offline.contentsId,
+        type: offline.type,
+        size: offline.size,
+        name: encryptedName,
+        plain_name: offline.name,
+        bucket: this.bucket,
+        folder_id: offline.folderId,
+        encrypt_version: EncryptionVersion.Aes03,
+        modificationTime: Date.now(),
+      },
+    };
 
-    return {
-      ...data,
-      contentsId: data.fileId,
-      modificationTime: data.updatedAt,
+    const response = await this.oldDriveClient.post<FileCreatedResponseDTO>(
+      `${process.env.API_URL}/api/storage/file`,
+      body
+    );
+
+    if (response.status === 500) {
+      throw new Error('Invalid response creating file');
+    }
+
+    const attributes: FileAttributes = {
+      ...response.data,
+      folderId: response.data.folder_id,
+      contentsId: offline.contentsId,
+      size: parseInt(response.data.size, 10),
       path: offline.path,
       status: FileStatuses.EXISTS,
     };
+
+    return attributes;
   }
 
   async trash(contentsId: string): Promise<void> {

@@ -23,6 +23,7 @@ import { InMemoryFileRepository } from '../../../../context/virtual-drive/files/
 import { SDKRemoteFileSystem } from '../../../../context/virtual-drive/files/infrastructure/SDKRemoteFileSystem';
 import { NodeWinLocalFileSystem } from '../../../../context/virtual-drive/files/infrastructure/NodeWinLocalFileSystem';
 import { LocalFileIdProvider } from '../../../../context/virtual-drive/shared/application/LocalFileIdProvider';
+import { DependencyInjectionHttpClientsProvider } from '../common/clients';
 
 export async function buildFilesContainer(
   folderContainer: FoldersContainer,
@@ -36,8 +37,14 @@ export async function buildFilesContainer(
   const eventHistory = DependencyInjectionEventRepository.get();
   const { virtualDrive } = DependencyInjectionVirtualDrive;
   const sdk = await DependencyInjectionStorageSdk.get();
+  const clients = DependencyInjectionHttpClientsProvider.get();
 
-  const remoteFileSystem = new SDKRemoteFileSystem(sdk, crypt, user.bucket);
+  const remoteFileSystem = new SDKRemoteFileSystem(
+    sdk,
+    clients.drive,
+    crypt,
+    user.bucket
+  );
   const localFileSystem = new NodeWinLocalFileSystem(
     virtualDrive,
     sharedContainer.relativePathToAbsoluteConverter

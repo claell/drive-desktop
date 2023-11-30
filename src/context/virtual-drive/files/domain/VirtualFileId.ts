@@ -27,11 +27,15 @@ export function createFilePlaceholderId(id: string): FilePlaceholderId {
 }
 
 export class VirtualFileId extends ValueObject<FilePlaceholderId> {
+  private static readonly PREFIX = 'FILE:';
+
   constructor(value: FilePlaceholderId) {
     super(value);
   }
 
   static fromContentsId(id: string): VirtualFileId {
-    return new VirtualFileId(createFilePlaceholderId(id));
+    const value = `${VirtualFileId.PREFIX}${id}` as const;
+
+    return new VirtualFileId(value);
   }
 }
